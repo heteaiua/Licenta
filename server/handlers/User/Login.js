@@ -19,10 +19,9 @@ const login = async(req,res,next)=> {
        const accessToken = jwt.sign({
                email:user.email,
                password:user.password
-    }, dotenv.config(`${process.env.ACCESS_TOKEN_SECRET}`),   
+    },process.env.ACCESS_TOKEN_SECRET,   
        {expiresIn:'1m'}
        )
-       
        res.status(200).json({accessToken});
 
    } else {
