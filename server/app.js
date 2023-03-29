@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const usersRoutes = require('./routes/users-routes');
 const dotenv = require("dotenv");
+
 mongoose
     .connect("mongodb+srv://hetea:hetea@licenta.0fh6mcx.mongodb.net/?retryWrites=true&w=majority",
     {

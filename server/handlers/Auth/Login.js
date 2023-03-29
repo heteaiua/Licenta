@@ -1,4 +1,5 @@
 const express = require('express');
+const asyncHandler = require("express-async-handler");
 const mongoose=require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
@@ -17,21 +18,21 @@ const login = async(req,res,next)=> {
     //compare paswword with hashedpassword
     if(user && (await bcrypt.compare(password,user.password)))  {
        const accessToken = jwt.sign({
-               email:user.email,
-               password:user.password
-    }, dotenv.config(`${process.env.ACCESS_TOKEN_SECRET}`),   
-       {expiresIn:'1m'}
+               user:{
+                email:user.email,
+               password:user.password},
+    },process.env.ACCESS_TOKEN_SECRET,   
+       {expiresIn:'60m'}
        )
-       
        res.status(200).json({accessToken});
 
    } else {
        res.status(401)
        throw new Error("Password and email is not valid");
    }
-   res.json({message: "login user"});
+   };
+   const currentUser = async(req,res)=>{
+    res.json(req.user);
    };
    
-   
-  
-   module.exports = login;
+   module.exports = {login, currentUser};

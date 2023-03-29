@@ -4,7 +4,7 @@ import Login from './auth/login/Login'
 import './App.css';
 import Home from './pages/home/Home';
 function App() {
-  return (
+    return (
       <Routes>
         <Route exact path="/" element={<Home/>} />
         <Route path="/login" element={<Login/>} />
