@@ -3,11 +3,13 @@ import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import Login from './auth/login/Login'
 import './App.css';
 import Home from './pages/home/Home';
+import SignUp from './auth/signup/SignUp';
 function App() {
     return (
       <Routes>
         <Route exact path="/" element={<Home/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<SignUp/>}/>
       </Routes>
   );
 }
