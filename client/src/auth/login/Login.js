@@ -23,17 +23,18 @@ const Login = () => {
   const btnStyle = { margin: "8px 0px" };
 
   const [redirect, setRedirect] = useState(false);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [token, setToken] = useState();
   if (redirect) {
     console.log(redirect);
-    return <Navigate to="/dashboard" state={{ token: token }} />;
+    console.log(token);
+    return <Navigate to="/" state={{ token: token }} />;
   }
-  const handleUsername = (e) => {
-    setUsername(e.target.value);
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
     setSubmitted(false);
   };
   const handlePassword = (e) => {
@@ -72,32 +73,32 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username === "" || password === "") {
-      setError(true);
-    } else {
-      const loginCall = await fetch("http://localhost:3000/login/", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({ Username: username, Password: password }),
-      });
-      const json = await loginCall.json();
-      //de aici imi da tokenul
-      console.log(json);
-      if (!json.error) {
-        setToken(json.accessToken);
-        setSubmitted(true);
-        setError(false);
-        setTimeout(() => setRedirect({ redirect: true }), 2000);
+    try {
+      if (email === "" || password === "") {
+        setError(true);
       } else {
-        setSubmitted(false);
-        setError(json.error);
-        setRedirect(false);
+        const loginCall = await fetch('http://localhost:5000/login', {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({ email: email, password: password }),
+        });
+        const json =  await loginCall.json();
+        //de aici imi da tokenul
+          setToken(json.accessToken);
+          setSubmitted(true);
+          setError(false);
+          setTimeout(() => setRedirect({ redirect: true }), 2000);
       }
+    } catch(err) {
+      setSubmitted(false);
+          setError(err);
+          setRedirect(false);
     }
+    
   };
   return (
     <div id="content">
@@ -116,7 +117,7 @@ const Login = () => {
             label="Username"
             variant="outlined"
             style={btnStyle}
-            onChange={handleUsername}
+            onChange={handleEmail}
             fullWidth
           />
           <TextField
