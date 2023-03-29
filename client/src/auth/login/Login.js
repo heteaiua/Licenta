@@ -92,6 +92,8 @@ const Login = () => {
           setSubmitted(true);
           setError(false);
           setTimeout(() => setRedirect({ redirect: true }), 2000);
+          localStorage.setItem("token",json.accessToken)
+        
       }
     } catch(err) {
       setSubmitted(false);
