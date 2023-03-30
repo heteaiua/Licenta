@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import "./SignUp.css";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Grid } from "@mui/material";
 import { Navigate } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 export default function Signup() {
   const style = { margin: "10px " };
-
-  const [word, setWord] = useState("");
-  const [size, setSize] = useState(200);
 
   const [error, setError] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -143,110 +141,118 @@ export default function Signup() {
   return (
     <form onSubmit={handleSubmit}>
       <div id="content">
-        <div className="home">
-          <div className="featuredItem">
-            <div>
-              <div className="featuredTitle">
-                <TextField
-                  style={style}
-                  id="outlined-basic"
-                  onChange={handleFirstName}
-                  variant="outlined"
-                  label="First Name"
-                  type="text"
-                  fullWidth
-                />
-              </div>
-              <div className="featuredTitle">
-                <TextField
-                  style={style}
-                  id="outlined-basic"
-                  onChange={handleLastName}
-                  variant="outlined"
-                  label="Last Name"
-                  type="text"
-                  fullWidth
-                />
-              </div>
-              <div className="featuredTitle">
-                <TextField
-                  style={style}
-                  id="outlined-basic"
-                  onChange={handleEmail}
-                  variant="outlined"
-                  label="Email"
-                  type="text"
-                  fullWidth
-                />
-              </div>
-              <div className="featuredTitle">
-                <TextField
-                  style={style}
-                  id="outlined-basic"
-                  onChange={handlePassword}
-                  variant="outlined"
-                  label="Password"
-                  type="text"
-                  fullWidth
-                />
-              </div>
-              <div className="featuredTitle">
-                <TextField
-                  style={style}
-                  id="outlined-basic"
-                  onChange={handleConfirmPassword}
-                  variant="outlined"
-                  label="Confirm Paswword"
-                  type="text"
-                  fullWidth
-                />
-              </div>
-              <div className="featuredTitle">
-                <TextField
-                  style={style}
-                  id="outlined-basic"
-                  onChange={handleAge}
-                  variant="outlined"
-                  label="Age"
-                  type="text"
-                  fullWidth
-                />
-              </div>
-              <div className="featuredTitle">
-                <TextField
-                  style={style}
-                  id="outlined-basic"
-                  onChange={handleCnp}
-                  variant="outlined"
-                  label="CNP"
-                  type="text"
-                  fullWidth
-                />
-              </div>
-              <div className="featuredTitle">
-                <TextField
-                  style={style}
-                  id="outlined-basic"
-                  onChange={handlePhoneNumber}
-                  variant="outlined"
-                  label="Phone Number"
-                  type="text"
-                  fullWidth
-                />
-              </div>
-              <div className="featuredTitle">
-                <Button
-                  style={style}
-                  type="submit"
-                  variant="contained"
-                  onClick={handleSubmit}
-                >
-                  Register
-                </Button>
+        <header>
+          <Navbar />
+        </header>
+        <Grid align="center" marginTop={10}>
+          <div className="home">
+            <div className="featuredItem">
+              <div>
+                <div>
+                  <h1>Register form</h1>
+                </div>
+                <div className="featuredTitle">
+                  <TextField
+                    style={style}
+                    id="outlined-basic"
+                    onChange={handleFirstName}
+                    variant="outlined"
+                    label="First Name"
+                    type="text"
+                    fullWidth
+                  />
+                </div>
+                <div className="featuredTitle">
+                  <TextField
+                    style={style}
+                    id="outlined-basic"
+                    onChange={handleLastName}
+                    variant="outlined"
+                    label="Last Name"
+                    type="text"
+                    fullWidth
+                  />
+                </div>
+                <div className="featuredTitle">
+                  <TextField
+                    style={style}
+                    id="outlined-basic"
+                    onChange={handleEmail}
+                    variant="outlined"
+                    label="Email"
+                    type="text"
+                    fullWidth
+                  />
+                </div>
+                <div className="featuredTitle">
+                  <TextField
+                    style={style}
+                    id="outlined-basic"
+                    onChange={handlePassword}
+                    variant="outlined"
+                    label="Password"
+                    type="text"
+                    fullWidth
+                  />
+                </div>
+                <div className="featuredTitle">
+                  <TextField
+                    style={style}
+                    id="outlined-basic"
+                    onChange={handleConfirmPassword}
+                    variant="outlined"
+                    label="Confirm Paswword"
+                    type="text"
+                    fullWidth
+                  />
+                </div>
+                <div className="featuredTitle">
+                  <TextField
+                    style={style}
+                    id="outlined-basic"
+                    onChange={handleAge}
+                    variant="outlined"
+                    label="Age"
+                    type="text"
+                    fullWidth
+                  />
+                </div>
+                <div className="featuredTitle">
+                  <TextField
+                    style={style}
+                    id="outlined-basic"
+                    onChange={handleCnp}
+                    variant="outlined"
+                    label="CNP"
+                    type="text"
+                    fullWidth
+                  />
+                </div>
+                <div className="featuredTitle">
+                  <TextField
+                    style={style}
+                    id="outlined-basic"
+                    onChange={handlePhoneNumber}
+                    variant="outlined"
+                    label="Phone Number"
+                    type="text"
+                    fullWidth
+                  />
+                </div>
+                <div className="featuredTitle">
+                  <Button
+                    style={style}
+                    type="submit"
+                    variant="contained"
+                    onClick={handleSubmit}
+                  >
+                    Register
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </Grid>
       </div>
     </form>
   );
