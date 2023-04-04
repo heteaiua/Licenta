@@ -1,24 +1,24 @@
-const User = require("../../models/UsersModel");
+const Flat = require("../../models/FlatModel");
 
-const getUserById = async (req, res, next) => {
-  const userId = req.params.userId;
-  let users;
+const getFlatById = async (req, res, next) => {
+  const flatId = req.params.flatId;
+  let flats;
   try {
-    users = await User.findById(userId);
-    console.log(users);
-    if (!users)
+    flats = await Flat.findById(flatId);
+    console.log(flats);
+    if (!flats)
       return res.json({
-        message: "No users found!",
+        message: "No flats found!",
       });
   } catch (err) {
     return res.json({
-      message: "Error! Could not get users!",
+      message: "Error! Could not get flats by id!",
       err: err,
     });
   }
   res.json({
-    message: "Users:",
-    users: users,
+    message: "Flats:",
+    flats: flats,
   });
 };
-module.exports = getUserById;
+module.exports = getFlatById;
