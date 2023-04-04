@@ -25,7 +25,11 @@ const app = express();
 app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json({ limit: "400mb" }));
 app.use(bodyParser.urlencoded({ limit: "400mb", extended: true }));
+
+//routes
+const UserControls = require("./handlers/UserFlatBind/UserFlatBind.js");
 app.use("/", usersRoutes);
 app.use("/flat", flatsRoutes);
+app.use("/user/:firstName/flats", UserControls.getAllFlats);
 
 app.listen(5000);
