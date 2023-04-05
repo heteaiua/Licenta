@@ -5,10 +5,10 @@ const Flat = new mongoose.Schema({
   city: { type: String, required: true },
   street: { type: String, required: true },
   county: { type: String, required: true },
-  user: {
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: false,
-    ref: "User",
+    ref: "Owner",
   },
 });
 module.exports = mongoose.model("Flat", Flat);

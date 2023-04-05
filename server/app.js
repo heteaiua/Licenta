@@ -4,6 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const usersRoutes = require("./routes/users-routes");
 const flatsRoutes = require("./routes/flats-routes");
+const applianceRoutes = require("./routes/appliance-routes");
 const dotenv = require("dotenv");
 
 mongoose
@@ -30,6 +31,7 @@ app.use(bodyParser.urlencoded({ limit: "400mb", extended: true }));
 const UserControls = require("./handlers/UserFlatBind/UserFlatBind.js");
 app.use("/", usersRoutes);
 app.use("/flat", flatsRoutes);
+app.use("/appliance", applianceRoutes);
 app.use("/user/:firstName/flats", UserControls.getAllFlats);
 
 app.listen(5000);
