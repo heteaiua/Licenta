@@ -17,14 +17,10 @@ const signup = async (req, res, next) => {
     phoneNumber,
     age,
   } = req.body;
-  if (!email || !password) {
-    res.status(400);
-    throw new Error("All fields are mandatory!");
-  }
+
   const userAvailable = await User.findOne({ email });
   if (userAvailable) {
-    res.status(400);
-    throw new Error("User Already registered!");
+    res.status(400).json("User Already registered!");
   }
 
   //Hash password
@@ -43,7 +39,10 @@ const signup = async (req, res, next) => {
   });
   console.log(`User created ${user}`);
   if (user) {
-    res.status(201).json({ email: User.email });
+    return res.status(201).json({
+      email: user.email,
+      message: "Thank you for joing us!" + user.firstName,
+    });
   } else {
     res.status(400);
     throw new Error("User data is not valid!");

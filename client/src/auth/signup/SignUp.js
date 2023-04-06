@@ -99,11 +99,14 @@ export default function Signup() {
         confirmPassword === "" ||
         age === "" ||
         cnp === "" ||
-        phoneNumber === ""
+        phoneNumber === "" ||
+        password !== confirmPassword ||
+        age < 18
       ) {
+        console.log("nu e bn");
         setError(true);
       } else {
-        const registerCall = await fetch("http://localhost:5000/signup", {
+        const registerCall = await fetch("http://localhost:5000/user/signup", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -121,7 +124,9 @@ export default function Signup() {
             cnp: cnp,
             phoneNumber: phoneNumber,
           }),
-        });
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data));
         const json = await registerCall.json();
         if (!json.error) {
           setToken(json.accessToken);
@@ -191,7 +196,7 @@ export default function Signup() {
                     onChange={handlePassword}
                     variant="outlined"
                     label="Password"
-                    type="text"
+                    type="password"
                     fullWidth
                   />
                 </div>
@@ -202,7 +207,7 @@ export default function Signup() {
                     onChange={handleConfirmPassword}
                     variant="outlined"
                     label="Confirm Paswword"
-                    type="text"
+                    type="password"
                     fullWidth
                   />
                 </div>

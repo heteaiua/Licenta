@@ -12,6 +12,8 @@ import Button from "@mui/material/Button";
 import PersonIcon from "@mui/icons-material/Person";
 import { Navigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
+import axios from "axios";
+
 const Login = () => {
   const paperStyle = {
     padding: 30,
@@ -31,8 +33,8 @@ const Login = () => {
   const [token, setToken] = useState();
 
   if (redirect) {
-    console.log(redirect);
-    console.log(token);
+    // console.log(redirect);
+    // console.log(token);
     return <Navigate to="/" state={{ token: token }} />;
   }
   const handleEmail = (e) => {
@@ -58,7 +60,7 @@ const Login = () => {
   const errorMessage = () => {
     let errorMessage = "";
     if (error) {
-      errorMessage = error[0].message;
+      errorMessage = error[0]?.message;
     }
     return (
       <div
@@ -79,7 +81,7 @@ const Login = () => {
       if (email === "" || password === "") {
         setError(true);
       } else {
-        const loginCall = await fetch("http://localhost:5000/login", {
+        await fetch("http://localhost:5000/user/login", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -87,16 +89,25 @@ const Login = () => {
             "Access-Control-Allow-Origin": "*",
           },
           body: JSON.stringify({ email: email, password: password }),
-        });
-        const json = await loginCall.json();
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data));
+
+        // const response = await axios.post("http://localhost:5000/user/login", {
+        //   email: email,
+        //   password: password,
+        // });
+
         //de aici imi da tokenul
-        setToken(json.accessToken);
+        // setToken(json.accessToken);
         setSubmitted(true);
         setError(false);
         setTimeout(() => setRedirect({ redirect: true }), 2000);
-        localStorage.setItem("token", json.accessToken);
+        // localStorage.setItem("token", json.accessToken);
       }
     } catch (err) {
+      console.log(err);
+      console.log(err?.response?.data?.message);
       setSubmitted(false);
       setError(err);
       setRedirect(false);
