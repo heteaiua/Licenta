@@ -28,10 +28,8 @@ app.use(bodyParser.json({ limit: "400mb" }));
 app.use(bodyParser.urlencoded({ limit: "400mb", extended: true }));
 
 //routes
-const UserControls = require("./handlers/UserFlatBind/UserFlatBind.js");
-app.use("/", usersRoutes);
+app.use("/user", usersRoutes);
 app.use("/flat", flatsRoutes);
 app.use("/appliance", applianceRoutes);
-app.use("/user/:firstName/flats", UserControls.getAllFlats);
 
 app.listen(5000);

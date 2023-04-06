@@ -1,7 +1,7 @@
 const express = require("express");
 const Flat = require("../../models/FlatModel");
 const createFlat = async (req, res, next) => {
-  const { name, city, street, county } = req.body;
+  const { name, city, street, county, userId } = req.body;
 
   let createdFlat;
   try {
@@ -11,6 +11,7 @@ const createFlat = async (req, res, next) => {
       city,
       street,
       county,
+      userId,
     });
     await createdFlat.save();
   } catch (err) {

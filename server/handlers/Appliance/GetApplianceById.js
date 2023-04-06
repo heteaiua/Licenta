@@ -17,7 +17,7 @@ const getApplianceById = async (req, res, next) => {
     });
   }
   res.json({
-    message: "Users:",
+    message: "Appliances",
     appliances: appliances,
   });
 };
