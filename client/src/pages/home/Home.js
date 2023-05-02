@@ -4,13 +4,11 @@ import { Button } from "@mui/material";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
 import "./Home.css";
-import Navbar from "../../components/Navbar";
+
 function Home() {
   return (
     <div id="content">
-      <header>
-        <Navbar />
-      </header>
+      <header></header>
 
       <div className="mainAction">
         <Box>

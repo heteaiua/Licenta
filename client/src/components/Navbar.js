@@ -12,8 +12,9 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
-const pages = ["Home", "Appliances", "About us"];
+import { Link, NavLink } from "react-router-dom";
+import "./Navbar.css";
+const pages = ["Home", "Appliances", "AboutUs"];
 const settings = ["Profile", "Account", "Logout"];
 
 function ResponsiveAppBar() {
@@ -67,6 +68,7 @@ function ResponsiveAppBar() {
             >
               <MenuIcon />
             </IconButton>
+
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -85,11 +87,15 @@ function ResponsiveAppBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {pages.map((page) => {
+                return (
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Link to={`/${page}`}>
+                      <Typography textAlign="center">{page}</Typography>
+                    </Link>
+                  </MenuItem>
+                );
+              })}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -110,15 +116,18 @@ function ResponsiveAppBar() {
             }}
           ></Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            <div className="link-container">
+              {pages.map((page) => (
+                <NavLink
+                  key={page}
+                  to={`/${page}`}
+                  onClick={handleCloseNavMenu}
+                  className={({ isActive }) => (isActive ? "active" : "link")}
+                >
+                  {page}
+                </NavLink>
+              ))}
+            </div>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
