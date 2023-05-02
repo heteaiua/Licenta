@@ -17,35 +17,39 @@ const signup = async (req, res, next) => {
     phoneNumber,
     age,
   } = req.body;
+  try {
+    const userAvailable = await User.findOne({ email });
+    if (userAvailable) {
+      return res.status(400).json("User Already registered!");
+    }
 
-  const userAvailable = await User.findOne({ email });
-  if (userAvailable) {
-    res.status(400).json("User Already registered!");
-  }
+    //Hash password
 
-  //Hash password
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  console.log("Hashed password ", hashedPassword);
-  const user = await User.create({
-    firstName,
-    lastName,
-    email,
-    password: hashedPassword,
-    confirmPassword,
-    cnp,
-    phoneNumber,
-    age,
-  });
-  console.log(`User created ${user}`);
-  if (user) {
-    return res.status(201).json({
-      email: user.email,
-      message: "Thank you for joing us!" + user.firstName,
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Hashed password ", hashedPassword);
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      confirmPassword,
+      cnp,
+      phoneNumber,
+      age,
     });
-  } else {
-    res.status(400);
-    throw new Error("User data is not valid!");
+    console.log(`User created ${user}`);
+    if (user) {
+      return res.status(201).json({
+        email: user.email,
+        message: "Thank you for joing us!" + user.firstName,
+      });
+    } else {
+      return res
+        .status(400)
+        .json({ message: JSON.stringify("User data is not valid!") });
+    }
+  } catch (err) {
+    return res.json({ err: err });
   }
 };
 

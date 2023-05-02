@@ -33,7 +33,6 @@ const login = async (req, res, next) => {
       return res
         .status(400)
         .json({ message: JSON.stringify("Password and email is not valid") });
-      // return res.status(500).send();
     }
   } catch (err) {
     return res.json({ err: err });
@@ -42,8 +41,6 @@ const login = async (req, res, next) => {
 const currentUser = async (req, res) => {
   res.json(req.user);
 };
-
-// module.exports = { login, currentUser };
 
 // const login = async (req, res, next) => {
 //   const { email, password } = req.body;
@@ -78,9 +75,5 @@ const currentUser = async (req, res) => {
 //     user: existingUser.toObject({ getters: true }),
 //   });
 // };
-
-//const currentUser = async (req, res) => {
-//res.json(req.user);
-//};
 
 module.exports = { login, currentUser };

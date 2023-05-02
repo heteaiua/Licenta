@@ -12,7 +12,6 @@ import Button from "@mui/material/Button";
 import PersonIcon from "@mui/icons-material/Person";
 import { Navigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
-import axios from "axios";
 
 const Login = () => {
   const paperStyle = {
@@ -23,7 +22,16 @@ const Login = () => {
   };
   const avatarStyle = { backgroundColor: "#1976d2" };
   const btnStyle = { margin: "8px 0px" };
-
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    age: "",
+    cnp: "",
+    phoneNumber: "",
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -31,14 +39,20 @@ const Login = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [token, setToken] = useState();
-
+  const EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/;
   if (redirect) {
     // console.log(redirect);
     // console.log(token);
     return <Navigate to="/" state={{ token: token }} />;
   }
+
   const handleEmail = (e) => {
     setEmail(e.target.value);
+    if (!EMAIL_REGEXP.test(e.target.value)) {
+      errors.email = "Email wrong format";
+    } else {
+      errors.email = "";
+    }
     setSubmitted(false);
   };
   const handlePassword = (e) => {
@@ -67,51 +81,48 @@ const Login = () => {
         className="error"
         style={{
           display: error ? "" : "none",
-          color: "#ffff",
+          color: "red",
         }}
       >
         <h4> {errorMessage} </h4>{" "}
       </div>
     );
   };
-
+  const isDisabled = email === "" || password === "";
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      if (email === "" || password === "") {
-        setError(true);
-      } else {
-        await fetch("http://localhost:5000/user/login", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-          body: JSON.stringify({ email: email, password: password }),
+    if (isDisabled) {
+      setError(true);
+    } else {
+      await fetch("http://localhost:5000/user/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ email: email, password: password }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+
+          if (data.accessToken) {
+            setSubmitted(true);
+            setError(false);
+            localStorage.setItem("token", data.accessToken);
+            setTimeout(() => setRedirect({ redirect: true }), 2000);
+          }
         })
-          .then((res) => res.json())
-          .then((data) => console.log(data));
-
-        // const response = await axios.post("http://localhost:5000/user/login", {
-        //   email: email,
-        //   password: password,
-        // });
-
-        //de aici imi da tokenul
-        // setToken(json.accessToken);
-        setSubmitted(true);
-        setError(false);
-        setTimeout(() => setRedirect({ redirect: true }), 2000);
-        // localStorage.setItem("token", json.accessToken);
-      }
-    } catch (err) {
-      console.log(err);
-      console.log(err?.response?.data?.message);
-      setSubmitted(false);
-      setError(err);
-      setRedirect(false);
+        .catch((err) => {
+          setSubmitted(false);
+          setError(err);
+          setRedirect(false);
+        });
+      //setToken(json.accessToken);
     }
+
+    //console.log(err?.response?.data?.message);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -137,6 +148,7 @@ const Login = () => {
               onChange={handleEmail}
               fullWidth
             />
+            {errors.email}
             <TextField
               id="password"
               label="Password"
@@ -153,6 +165,7 @@ const Login = () => {
               color="primary"
               style={btnStyle}
               fullWidth
+              disabled={isDisabled}
             >
               Login
             </Button>
