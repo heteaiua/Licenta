@@ -1,0 +1,17 @@
+.link {
+  text-decoration: none;
+  color: white;
+  text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.link-container {
+  display: flex;
+  font-size: large;
+  gap: 100px;
+}
+.active {
+  color: burlywood;
+  text-decoration: none;
+  text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  font-size: larger;
+}
