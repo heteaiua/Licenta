@@ -11,7 +11,6 @@ import {
 import Button from "@mui/material/Button";
 import PersonIcon from "@mui/icons-material/Person";
 import { Navigate } from "react-router-dom";
-import Navbar from "../../components/Navbar";
 
 const Login = () => {
   const paperStyle = {
@@ -127,9 +126,7 @@ const Login = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div id="content">
-        <header>
-          <Navbar />
-        </header>
+        <header></header>
         <Grid align="center" marginTop={10}>
           <Paper elevation={10} style={paperStyle}>
             <Avatar style={avatarStyle}>
