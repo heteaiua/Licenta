@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Navigate } from "react-router-dom";
-import Navbar from "../../components/Navbar";
 export default function Signup() {
   const paperStyle = {
     padding: 30,
@@ -191,9 +190,7 @@ export default function Signup() {
   return (
     <form onSubmit={handleSubmit}>
       <div id="content">
-        <header>
-          <Navbar />
-        </header>
+        <header></header>
         <Grid align="center" marginTop={10}>
           <Paper elevation={10} style={paperStyle}>
             <h2 style={btnStyle}>Register form</h2>
