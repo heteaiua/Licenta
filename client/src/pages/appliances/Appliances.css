@@ -5,3 +5,10 @@
   align-items: center;
   height: fit-content;
 }
+.lab {
+  display: block;
+  font-size: smaller;
+}
+.date-pick {
+  height: auto;
+}

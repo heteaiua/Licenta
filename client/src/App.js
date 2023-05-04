@@ -8,6 +8,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Navbar from "./components/Navbar";
 import Appliances from "./pages/appliances/Appliances";
 import ContactUs from "./pages/contactUs/ContactUs";
+import { ModalProvider } from "./components/Modal";
+
 function App() {
   return (
     <>
