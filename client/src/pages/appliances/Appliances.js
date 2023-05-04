@@ -48,7 +48,7 @@ const Img = styled("img")({
 const style = { margin: "10px " };
 const btnStyle = { margin: "8px 0px" };
 const columns = [
-  { field: "id", headerName: "ID", type: "number" },
+  // { field: "id", headerName: "ID", type: "number" },
   { field: "name", headerName: "Name", width: 300 },
   {
     field: "consumption",
@@ -83,6 +83,8 @@ export default function Appliances() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [tableData, setTableData] = useState([]);
+
+  const [selectedIndexs, setSelectedIndexes] = useState([]);
   const handleApplianceName = (e) => {
     setApplianceName(e.target.value);
   };
@@ -123,7 +125,7 @@ export default function Appliances() {
       .then((res) => res.json())
       .then((data) => console.log("data", data));
   };
-
+  //get appliances
   const handleGetAppliances = async () => {
     const applianceCall = await fetch(
       "http://localhost:5000/appliance/getAllAppliances",
@@ -141,7 +143,8 @@ export default function Appliances() {
       .then((data) => {
         const transformed = data.appliances.map(
           ({ _id, name, consumption, price, dateStart, dateEnd }, index) => ({
-            id: index + 1,
+            // id: index + 1,
+            id: _id,
             name: name,
             consumption: consumption,
             dateStart: dateStart,
@@ -162,13 +165,37 @@ export default function Appliances() {
   useEffect(() => {
     handleGetAppliances();
   }, []);
-
+  //delete appliance
+  const handleDeleteAppliance = async (e) => {
+    //e.preventDefault();
+    selectedIndexs.map(async (index) => {
+      await fetch(`http://localhost:5000/appliance/deleteAppliance/${index}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "state.token",
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          name: applianceName,
+          consumption: applianceConsumption,
+          price: appliancePrice,
+          dateStart: startDate,
+          dateEnd: endDate,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => console.log("data", data));
+    });
+  };
   return (
     <form>
       <div>
         <Searchbar />
       </div>
       <Button onClick={handleOpen}>New Appliance</Button>
+      <Button onClick={handleDeleteAppliance}>Delete Appliance</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -267,6 +294,9 @@ export default function Appliances() {
           }}
           pageSizeOptions={[5, 10]}
           checkboxSelection
+          onRowSelectionModelChange={(itm) => {
+            setSelectedIndexes(itm);
+          }}
         />
       </div>
     </form>
