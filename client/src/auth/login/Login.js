@@ -110,6 +110,7 @@ const Login = () => {
             setSubmitted(true);
             setError(false);
             localStorage.setItem("token", data.accessToken);
+            localStorage.setItem("user", data.user._id);
             setTimeout(() => setRedirect({ redirect: true }), 2000);
           }
         })
