@@ -8,7 +8,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Navbar from "./components/Navbar";
 import Appliances from "./pages/appliances/Appliances";
 import ContactUs from "./pages/contactUs/ContactUs";
-import { ModalProvider } from "./components/Modal";
+import Flats from "./pages/flats/Flats";
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/Home" element={<Dashboard />} />
         <Route path="/Appliances" element={<Appliances />} />
+        <Route path="/Flats" element={<Flats />} />
         <Route path="/ContactUs" element={<ContactUs />} />
       </Routes>
     </>

@@ -17,7 +17,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import InputAdornment from "@mui/material/InputAdornment";
-import Searchbar from "../../components/SearchBar";
 import { useModal } from "../../components/Modal";
 import Login from "../../auth/login/Login";
 import { DataGrid } from "@mui/x-data-grid";
@@ -45,7 +44,7 @@ const Img = styled("img")({
   maxWidth: "100%",
   maxHeight: "100%",
 });
-const style = { margin: "10px " };
+const style = { margin: "10px" };
 const btnStyle = { margin: "8px 0px" };
 const columns = [
   // { field: "id", headerName: "ID", type: "number" },
@@ -80,11 +79,19 @@ export default function Appliances() {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [open, setOpen] = React.useState(false);
+  const [openUpdate, setOpenUpdate] = React.useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [tableData, setTableData] = useState([]);
 
+  const handleOpenUpdate = () => setOpenUpdate(true);
+  const handleCloseUpdate = () => setOpenUpdate(false);
+
+  const [tableData, setTableData] = useState([]);
   const [selectedIndexs, setSelectedIndexes] = useState([]);
+  const [initialValue, setInitialValue] = useState([]);
+  const [selectedAppliance, setSelectedAppliance] = useState({});
+
   const handleApplianceName = (e) => {
     setApplianceName(e.target.value);
   };
@@ -152,14 +159,13 @@ export default function Appliances() {
             price: price,
           })
         );
-        console.log(transformed);
+        //console.log(transformed);
         setTableData(transformed);
       });
-    console.log("date din tabel" + tableData);
   };
 
   useEffect(() => {
-    console.log("table data", tableData);
+    //console.log("table data", tableData);
   }, [tableData]);
 
   useEffect(() => {
@@ -186,16 +192,51 @@ export default function Appliances() {
         }),
       })
         .then((res) => res.json())
-        .then((data) => console.log("data", data));
+        .then((data) => console.log("dataDelete", data));
     });
   };
+  //update appliance
+  const handleUpdateAppliance = async (e) => {
+    //e.preventDefault();
+    selectedIndexs.map(async (index) => {
+      await fetch(`http://localhost:5000/appliance/updateAppliance/${index}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: "state.token",
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          name: applianceName,
+          consumption: applianceConsumption,
+          price: appliancePrice,
+          dateStart: startDate,
+          dateEnd: endDate,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => console.log("dataUpdate", data));
+      setSelectedAppliance(index);
+    });
+  };
+
   return (
     <form>
-      <div>
-        <Searchbar />
+      <div className="space">
+        <h1>Welcome, you can create, update and delete appliances!</h1>
       </div>
-      <Button onClick={handleOpen}>New Appliance</Button>
-      <Button onClick={handleDeleteAppliance}>Delete Appliance</Button>
+      <div className="buttonAppliance">
+        <Button style={btnStyle} onClick={handleOpen}>
+          New Appliance
+        </Button>
+        <Button style={btnStyle} onClick={handleDeleteAppliance}>
+          Delete Appliance
+        </Button>
+        <Button style={btnStyle} onClick={handleOpenUpdate}>
+          Update Appliance
+        </Button>
+      </div>
       <Modal
         open={open}
         onClose={handleClose}
@@ -211,7 +252,7 @@ export default function Appliances() {
                 id="standard-helperText"
                 variant="standard"
                 label="Name"
-                defaultValue=""
+                defaultValue="aaaa"
                 type="text"
                 onChange={handleApplianceName}
                 fullWidth
@@ -271,7 +312,7 @@ export default function Appliances() {
                 </div>
               </LocalizationProvider>
               <Button
-                style={style}
+                style={btnStyle}
                 type="submit"
                 variant="contained"
                 onClick={handleCreateAppliance}
@@ -283,6 +324,92 @@ export default function Appliances() {
         </Box>
       </Modal>
 
+      <Modal
+        open={openUpdate}
+        onClose={handleCloseUpdate}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleM}>
+          <div id="content-appliance">
+            <header></header>
+            <Grid align="center" marginTop={5}>
+              <TextField
+                style={style}
+                id="standard-helperText"
+                variant="standard"
+                label="Name"
+                defaultValue={initialValue}
+                type="text"
+                onChange={handleApplianceName}
+                fullWidth
+              />
+              <TextField
+                style={style}
+                id="standard-helperText"
+                variant="standard"
+                label="Consumption/hour"
+                defaultValue=""
+                type="text"
+                onChange={handleApplianceConsumption}
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment disableTypography position="end">
+                      Watt
+                    </InputAdornment>
+                  ),
+                }}
+                helperText="Standard consumption, you can modify"
+              />
+              <TextField
+                style={style}
+                id="standard-helperText"
+                variant="standard"
+                label="Price/hour"
+                defaultValue=""
+                type="text"
+                onChange={handleAppliancePrice}
+                fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment disableTypography position="end">
+                      $
+                    </InputAdornment>
+                  ),
+                }}
+                helperText="Standard price, you can modify"
+              />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <div className="date-pick">
+                  <label className="lab">Date Start</label>
+                  <DatePicker
+                    selected={setStartDate}
+                    onChange={handleStartDate}
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="Select a date"
+                  />
+                  <label className="lab">Date End</label>
+                  <DatePicker
+                    selected={setEndDate}
+                    onChange={handleEndDate}
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="Select a date"
+                  />
+                </div>
+              </LocalizationProvider>
+              <Button
+                style={btnStyle}
+                type="submit"
+                variant="contained"
+                onClick={handleUpdateAppliance}
+              >
+                Update
+              </Button>
+            </Grid>
+          </div>
+        </Box>
+      </Modal>
       <div styleM={{ height: 700, width: "100%" }}>
         <DataGrid
           rows={tableData}
@@ -296,6 +423,7 @@ export default function Appliances() {
           checkboxSelection
           onRowSelectionModelChange={(itm) => {
             setSelectedIndexes(itm);
+            console.log("indexes: " + itm);
           }}
         />
       </div>
