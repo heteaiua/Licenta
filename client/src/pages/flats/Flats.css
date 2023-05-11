@@ -1,5 +1,4 @@
 #content-flat {
-  background-color: #ffffff;
   display: inline-flex;
   padding: 17px;
   align-items: center;
@@ -14,7 +13,18 @@
 }
 .buttonFlat {
   text-align: end;
-  background-color: rgb(243, 243, 243);
+  background-color: #e5f0ff;
+}
+.btn {
+  margin: "8px 0px";
+}
+.btn:hover {
+  background-color: #b61010;
+  transition: 0.7s;
+  color: red;
+}
+.btn:focus {
+  color: red;
 }
 .space {
   padding-top: 50px;
