@@ -6,5 +6,10 @@ const Appliance = new mongoose.Schema({
   price: { type: Number, required: true },
   dateStart: { type: Date, required: true },
   dateEnd: { type: Date, required: true },
+  flatId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Flat",
+  },
 });
 module.exports = mongoose.model("Appliance", Appliance);

@@ -12,6 +12,11 @@ import {
   Box,
   Modal,
   Typography,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  FormHelperText,
 } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -70,6 +75,11 @@ const columns = [
     type: "date",
     valueGetter: ({ value }) => value && new Date(value),
   },
+  {
+    field: "Flat",
+    headerName: "Flat",
+    width: 300,
+  },
 ];
 
 export default function Appliances() {
@@ -77,6 +87,7 @@ export default function Appliances() {
   const [applianceConsumption, setApplianceConsumption] = useState("");
   const [appliancePrice, setAppliancePrice] = useState("");
   const [startDate, setStartDate] = useState(null);
+
   const [endDate, setEndDate] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [openUpdate, setOpenUpdate] = React.useState(false);
@@ -86,12 +97,19 @@ export default function Appliances() {
 
   const handleOpenUpdate = () => setOpenUpdate(true);
   const handleCloseUpdate = () => setOpenUpdate(false);
-
+  const [flatId, setFlatId] = useState("");
   const [tableData, setTableData] = useState([]);
   const [selectedIndexs, setSelectedIndexes] = useState([]);
   const [initialValue, setInitialValue] = useState([]);
   const [selectedAppliance, setSelectedAppliance] = useState({});
-
+  const [tableDataFlat, setTableDataFlat] = useState([]);
+  const [chosenFlat, setChosenFlat] = useState("");
+  const handleFlatId = (e) => {
+    setFlatId(e.target.value);
+  };
+  const handleChosenFlat = (e) => {
+    setChosenFlat(e.target.value);
+  };
   const handleApplianceName = (e) => {
     setApplianceName(e.target.value);
   };
@@ -107,6 +125,41 @@ export default function Appliances() {
   const handleEndDate = (e) => {
     setEndDate(e.$d);
   };
+
+  //get flats by user ID
+  const handleGetFlatsByUserId = async () => {
+    let flatUser = localStorage.getItem("user");
+    await fetch(`http://localhost:5000/user/flats/${flatUser}`, {
+      method: "GET",
+      headers: {
+        Authorization: "state.token",
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("getFlatsByUserId", data);
+        const selectOptions = data.data.map(({ name, _id }) => ({
+          // id: index + 1,
+          name: name,
+          id: _id,
+        }));
+        console.log("selectOptions", selectOptions);
+        setTableDataFlat(selectOptions);
+        setFlatId(data.data[0]._id);
+      });
+  };
+
+  useEffect(() => {
+    console.log("table data name", tableDataFlat);
+  }, [tableDataFlat]);
+
+  useEffect(() => {
+    handleGetFlatsByUserId();
+  }, []);
+
   // create appliance
   const handleCreateAppliance = async (e) => {
     e.preventDefault();
@@ -126,6 +179,7 @@ export default function Appliances() {
           price: appliancePrice,
           dateStart: startDate,
           dateEnd: endDate,
+          flatId: flatId,
         }),
       }
     )
@@ -149,7 +203,10 @@ export default function Appliances() {
       .then((res) => res.json())
       .then((data) => {
         const transformed = data.appliances.map(
-          ({ _id, name, consumption, price, dateStart, dateEnd }, index) => ({
+          (
+            { _id, name, consumption, price, dateStart, dateEnd, flatId },
+            index
+          ) => ({
             // id: index + 1,
             id: _id,
             name: name,
@@ -157,6 +214,7 @@ export default function Appliances() {
             dateStart: dateStart,
             dateEnd: dateEnd,
             price: price,
+            flatId: flatId,
           })
         );
         //console.log(transformed);
@@ -171,6 +229,7 @@ export default function Appliances() {
   useEffect(() => {
     handleGetAppliances();
   }, []);
+
   //delete appliance
   const handleDeleteAppliance = async (e) => {
     //e.preventDefault();
@@ -189,6 +248,7 @@ export default function Appliances() {
           price: appliancePrice,
           dateStart: startDate,
           dateEnd: endDate,
+          flatId: flatId,
         }),
       })
         .then((res) => res.json())
@@ -213,6 +273,7 @@ export default function Appliances() {
           price: appliancePrice,
           dateStart: startDate,
           dateEnd: endDate,
+          flatId: flatId,
         }),
       })
         .then((res) => res.json())
@@ -227,13 +288,13 @@ export default function Appliances() {
         <h1>Welcome, you can create, update and delete appliances!</h1>
       </div>
       <div className="buttonAppliance">
-        <Button style={btnStyle} onClick={handleOpen}>
+        <Button className="btn" onClick={handleOpen}>
           New Appliance
         </Button>
-        <Button style={btnStyle} onClick={handleDeleteAppliance}>
+        <Button className="btn" onClick={handleDeleteAppliance}>
           Delete Appliance
         </Button>
-        <Button style={btnStyle} onClick={handleOpenUpdate}>
+        <Button className="btn" onClick={handleOpenUpdate}>
           Update Appliance
         </Button>
       </div>
@@ -311,6 +372,27 @@ export default function Appliances() {
                   />
                 </div>
               </LocalizationProvider>
+              <FormControl sx={{ m: 5, minWidth: 30 }}>
+                <InputLabel id="demo-simple-select-helper-label">
+                  Flat
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  defaultValue=""
+                  value={chosenFlat}
+                  label="Flat"
+                  onChange={handleChosenFlat}
+                >
+                  {tableDataFlat.map((flat) => (
+                    <MenuItem key={flat.flatId} value={flat.flatId}>
+                      {flat.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Select the flat</FormHelperText>
+              </FormControl>
+
               <Button
                 style={btnStyle}
                 type="submit"

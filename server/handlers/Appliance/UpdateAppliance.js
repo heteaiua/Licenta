@@ -11,6 +11,7 @@ const updateAppliance = async (req, res, next) => {
         price: req.body.price,
         dateStart: req.body.dateStart,
         dateEnd: req.body.dateEnd,
+        flatId: req.body.flatId,
       }
     );
 

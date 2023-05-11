@@ -104,7 +104,7 @@ export default function Flats() {
     let flatUser = localStorage.getItem("user");
     if (flatUser) {
       setFlatUser(flatUser);
-      console.log("flatUser", flatUser);
+      console.log("flatUserId", flatUser);
     }
   }, []);
   // create flat
@@ -131,8 +131,47 @@ export default function Flats() {
   };
 
   //get flats
-  const handleGetFlats = async () => {
-    const flatsCall = await fetch("http://localhost:5000/flat/getAllFlats", {
+  // const handleGetFlats = async () => {
+  //   const flatsCall = await fetch("http://localhost:5000/flat/getAllFlats", {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: "state.token",
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       const transformed = data.flats.map(
+  //         ({ _id, name, city, street, county }, index) => ({
+  //           // id: index + 1,
+  //           id: _id,
+  //           name: name,
+  //           city: city,
+  //           street: street,
+  //           county: county,
+  //           // userId: flatUser,
+  //         })
+  //       );
+  //       //console.log(transformed);
+  //       setTableData(transformed);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   //console.log("table data", tableData);
+  // }, [tableData]);
+
+  // useEffect(() => {
+  //   handleGetFlats();
+  // }, []);
+
+  //get flats by userID
+  //get flats
+  const handleGetFlatsByUserId = async () => {
+    let flatUser = localStorage.getItem("user");
+    await fetch(`http://localhost:5000/user/flats/${flatUser}`, {
       method: "GET",
       headers: {
         Authorization: "state.token",
@@ -143,29 +182,31 @@ export default function Flats() {
     })
       .then((res) => res.json())
       .then((data) => {
-        const transformed = data.flats.map(
-          ({ _id, name, city, street, county }, index) => ({
+        console.log("datadadadadadadad", data);
+        const transformed = data.data.map(
+          ({ _id, name, city, street, county }) => ({
             // id: index + 1,
             id: _id,
             name: name,
             city: city,
             street: street,
             county: county,
-            // userId: flatUser,
+            userId: flatUser,
           })
         );
-        //console.log(transformed);
+        console.log("transformed", transformed);
         setTableData(transformed);
       });
   };
 
   useEffect(() => {
-    //console.log("table data", tableData);
+    console.log("table data", tableData);
   }, [tableData]);
 
   useEffect(() => {
-    handleGetFlats();
+    handleGetFlatsByUserId();
   }, []);
+
   //delete flats
   const handleDeleteFlat = async (e) => {
     //e.preventDefault();
@@ -190,6 +231,7 @@ export default function Flats() {
         .then((data) => console.log("dataDelete", data));
     });
   };
+
   //update flat
   const handleUpdateFlat = async (e) => {
     //e.preventDefault();
@@ -222,13 +264,13 @@ export default function Flats() {
         <h1>Welcome, you can create, update and delete flats!</h1>
       </div>
       <div className="buttonFlat">
-        <Button style={btnStyle} onClick={handleOpen}>
+        <Button className="btn" onClick={handleOpen}>
           New flat
         </Button>
-        <Button style={btnStyle} onClick={handleDeleteFlat}>
+        <Button className="btn" onClick={handleDeleteFlat}>
           Delete flat
         </Button>
-        <Button style={btnStyle} onClick={handleOpenUpdate}>
+        <Button className="btn" onClick={handleOpenUpdate}>
           Update flat
         </Button>
       </div>

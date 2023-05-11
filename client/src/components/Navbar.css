@@ -1,6 +1,6 @@
 .link {
   text-decoration: none;
-  color: white;
+  color: #f5f9ff;
   text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -10,8 +10,11 @@
   gap: 100px;
 }
 .active {
-  color: burlywood;
+  color: #001c66;
   text-decoration: none;
   text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
   font-size: larger;
+}
+.appBar {
+  background-color: #76a9ff;
 }
