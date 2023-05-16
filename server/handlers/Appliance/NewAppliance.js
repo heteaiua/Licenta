@@ -1,7 +1,8 @@
 const express = require("express");
 const Appliance = require("../../models/ApplianceModel");
 const createAppliance = async (req, res, next) => {
-  const { name, consumption, price, dateStart, dateEnd, flatId } = req.body;
+  const { name, consumption, price, dateStart, dateEnd, flatId, userId } =
+    req.body;
 
   let createdAppliance;
   try {
@@ -13,6 +14,7 @@ const createAppliance = async (req, res, next) => {
       dateStart,
       dateEnd,
       flatId,
+      userId,
     });
     await createdAppliance.save();
   } catch (err) {

@@ -87,8 +87,9 @@ export default function Appliances() {
   const [applianceConsumption, setApplianceConsumption] = useState("");
   const [appliancePrice, setAppliancePrice] = useState("");
   const [startDate, setStartDate] = useState(null);
-
   const [endDate, setEndDate] = useState(null);
+  const [userId, setUserId] = useState("");
+
   const [open, setOpen] = React.useState(false);
   const [openUpdate, setOpenUpdate] = React.useState(false);
 
@@ -97,15 +98,19 @@ export default function Appliances() {
 
   const handleOpenUpdate = () => setOpenUpdate(true);
   const handleCloseUpdate = () => setOpenUpdate(false);
+
   const [flatId, setFlatId] = useState("");
+  const [flatUser, setFlatUser] = useState("");
+
   const [tableData, setTableData] = useState([]);
   const [selectedIndexs, setSelectedIndexes] = useState([]);
   const [initialValue, setInitialValue] = useState([]);
   const [selectedAppliance, setSelectedAppliance] = useState({});
   const [tableDataFlat, setTableDataFlat] = useState([]);
   const [chosenFlat, setChosenFlat] = useState("");
-  const handleFlatId = (e) => {
-    setFlatId(e.target.value);
+
+  const handleUserId = (e) => {
+    setUserId(e.target.value);
   };
   const handleChosenFlat = (e) => {
     setChosenFlat(e.target.value);
@@ -125,19 +130,70 @@ export default function Appliances() {
   const handleEndDate = (e) => {
     setEndDate(e.$d);
   };
+  //get appliances by flat id;
+
+  // const handleGetAllAppliancesByFlatId = async () => {
+  //   await fetch(`http://localhost:5000/flat/appliances/:${flatId}`, {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: "state.token",
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log("getAllAppliancesByFlatId", data);
+  //       const selectOptions = data.data.map(
+  //         ({ _id, name, consumption, price, dateStart, dateEnd, flatId }) => ({
+  //           // id: index + 1,
+  //           id: _id,
+  //           name: name,
+  //           consumption: consumption,
+  //           dateStart: dateStart,
+  //           dateEnd: dateEnd,
+  //           price: price,
+  //           flatId: flatId,
+  //         })
+  //       );
+  //       console.log("aiciiiiiii", selectOptions);
+  //       setTableDataFlat(selectOptions);
+  //       //setFlatId(data.data[0]._id);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   console.log("table data name", tableDataFlat);
+  // }, [tableDataFlat]);
+
+  // useEffect(() => {
+  //   handleGetAllAppliancesByFlatId();
+  // }, []);
 
   //get flats by user ID
-  const handleGetFlatsByUserId = async () => {
+
+  useEffect(() => {
     let flatUser = localStorage.getItem("user");
-    await fetch(`http://localhost:5000/user/flats/${flatUser}`, {
-      method: "GET",
-      headers: {
-        Authorization: "state.token",
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
+    if (flatUser) {
+      setFlatUser(flatUser);
+      console.log("flatUserId", flatUser);
+    }
+  }, []);
+
+  const handleGetFlatsByUserId = async () => {
+    await fetch(
+      `http://localhost:5000/user/flats/${localStorage.getItem("user")}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "state.token",
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log("getFlatsByUserId", data);
@@ -180,16 +236,19 @@ export default function Appliances() {
           dateStart: startDate,
           dateEnd: endDate,
           flatId: flatId,
+          userId: flatUser,
         }),
       }
     )
       .then((res) => res.json())
-      .then((data) => console.log("data", data));
+      .then((data) => console.log("create", data));
   };
-  //get appliances
-  const handleGetAppliances = async () => {
-    const applianceCall = await fetch(
-      "http://localhost:5000/appliance/getAllAppliances",
+
+  //get appliances by user id
+
+  const handleGetAppliancesByUserId = async () => {
+    await fetch(
+      `http://localhost:5000/user/appliances/${localStorage.getItem("user")}`,
       {
         method: "GET",
         headers: {
@@ -202,11 +261,9 @@ export default function Appliances() {
     )
       .then((res) => res.json())
       .then((data) => {
-        const transformed = data.appliances.map(
-          (
-            { _id, name, consumption, price, dateStart, dateEnd, flatId },
-            index
-          ) => ({
+        console.log("datadadadadadadad", data);
+        const transformed = data.data.map(
+          ({ _id, name, consumption, price, dateStart, dateEnd, flatId }) => ({
             // id: index + 1,
             id: _id,
             name: name,
@@ -215,20 +272,66 @@ export default function Appliances() {
             dateEnd: dateEnd,
             price: price,
             flatId: flatId,
+            userId: flatUser,
           })
         );
-        //console.log(transformed);
+        console.log("transformed appliances", transformed);
         setTableData(transformed);
       });
   };
 
   useEffect(() => {
-    //console.log("table data", tableData);
+    console.log("table data user id appliances", tableData);
   }, [tableData]);
 
   useEffect(() => {
-    handleGetAppliances();
+    handleGetAppliancesByUserId();
   }, []);
+
+  // // //get appliances
+
+  // const handleGetAppliances = async () => {
+  //   const applianceCall = await fetch(
+  //     "http://localhost:5000/appliance/getAllAppliances",
+  //     {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: "state.token",
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //         "Access-Control-Allow-Origin": "*",
+  //       },
+  //     }
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       const transformed = data.appliances.map(
+  //         (
+  //           { _id, name, consumption, price, dateStart, dateEnd, flatId },
+  //           index
+  //         ) => ({
+  //           // id: index + 1,
+  //           id: _id,
+  //           name: name,
+  //           consumption: consumption,
+  //           dateStart: dateStart,
+  //           dateEnd: dateEnd,
+  //           price: price,
+  //           flatId: flatId,
+  //         })
+  //       );
+  //       //console.log(transformed);
+  //       setTableData(transformed);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   //console.log("table data", tableData);
+  // }, [tableData]);
+
+  // useEffect(() => {
+  //   handleGetAppliances();
+  // }, []);
 
   //delete appliance
   const handleDeleteAppliance = async (e) => {
@@ -249,6 +352,7 @@ export default function Appliances() {
           dateStart: startDate,
           dateEnd: endDate,
           flatId: flatId,
+          userId: flatUser,
         }),
       })
         .then((res) => res.json())
@@ -274,6 +378,7 @@ export default function Appliances() {
           dateStart: startDate,
           dateEnd: endDate,
           flatId: flatId,
+          userId: flatUser,
         }),
       })
         .then((res) => res.json())
@@ -385,9 +490,7 @@ export default function Appliances() {
                   onChange={handleChosenFlat}
                 >
                   {tableDataFlat.map((flat) => (
-                    <MenuItem key={flat.flatId} value={flat.flatId}>
-                      {flat.name}
-                    </MenuItem>
+                    <MenuItem value={flat.flatId}>{flat.name}</MenuItem>
                   ))}
                 </Select>
                 <FormHelperText>Select the flat</FormHelperText>

@@ -12,6 +12,7 @@ const updateAppliance = async (req, res, next) => {
         dateStart: req.body.dateStart,
         dateEnd: req.body.dateEnd,
         flatId: req.body.flatId,
+        userId: req.body.userId,
       }
     );
 
