@@ -43,7 +43,7 @@ export default function Signup() {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   if (redirect) {
-    return <Navigate to="/dashboard" state={{ token: token }} />;
+    return <Navigate to="/login" state={{ token: token }} />;
   }
 
   const EMAIL_REGEXP = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/;
