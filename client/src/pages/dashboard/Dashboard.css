@@ -5,3 +5,11 @@
   display: flex;
   justify-content: center;
 }
+.space {
+  padding-top: 50px;
+  padding-bottom: 30px;
+  background-color: #ffffff;
+  text-align: center;
+  color: rgb(5, 5, 13);
+  opacity: 70%;
+}
