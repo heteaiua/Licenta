@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import "./Appliances.css";
 import { styled } from "@mui/material/styles";
+
 import {
   Paper,
   Link,
@@ -108,13 +109,20 @@ export default function Appliances() {
   const [selectedAppliance, setSelectedAppliance] = useState({});
   const [tableDataFlat, setTableDataFlat] = useState([]);
   const [chosenFlat, setChosenFlat] = useState("");
-
+  const [selectedFlatName, setSelectedFlatName] = useState("");
   const handleUserId = (e) => {
     setUserId(e.target.value);
   };
   const handleChosenFlat = (e) => {
     setChosenFlat(e.target.value);
   };
+  const renderSelectedFlat = () => {
+    const selectedFlat = tableDataFlat.find(
+      (flat) => flat.flatId === chosenFlat
+    );
+    return selectedFlat ? selectedFlat.name : "";
+  };
+
   const handleApplianceName = (e) => {
     setApplianceName(e.target.value);
   };
@@ -479,7 +487,7 @@ export default function Appliances() {
               </LocalizationProvider>
               <FormControl sx={{ m: 5, minWidth: 30 }}>
                 <InputLabel id="demo-simple-select-helper-label">
-                  Flat
+                  flat
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-helper-label"
@@ -488,9 +496,12 @@ export default function Appliances() {
                   value={chosenFlat}
                   label="Flat"
                   onChange={handleChosenFlat}
+                  renderValue={renderSelectedFlat}
                 >
                   {tableDataFlat.map((flat) => (
-                    <MenuItem value={flat.flatId}>{flat.name}</MenuItem>
+                    <MenuItem key={flat.flatId} value={flat.flatId}>
+                      {flat.name}
+                    </MenuItem>
                   ))}
                 </Select>
                 <FormHelperText>Select the flat</FormHelperText>

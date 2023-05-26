@@ -42,7 +42,7 @@ const Login = () => {
   if (redirect) {
     // console.log(redirect);
     // console.log(token);
-    return <Navigate to="/dashboard" state={{ token: token }} />;
+    return <Navigate to="/Home" state={{ token: token }} />;
   }
 
   const handleEmail = (e) => {
