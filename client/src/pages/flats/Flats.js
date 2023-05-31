@@ -21,7 +21,7 @@ import { useModal } from "../../components/Modal";
 import Login from "../../auth/login/Login";
 import { DataGrid } from "@mui/x-data-grid";
 
-const styleM = {
+const stylem = {
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -280,7 +280,7 @@ export default function Flats() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={styleM}>
+        <Box sx={stylem}>
           <div id="content-flat">
             <header></header>
             <Grid align="center" marginTop={5}>
@@ -343,7 +343,7 @@ export default function Flats() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={styleM}>
+        <Box sx={stylem}>
           <div id="content-flat">
             <header></header>
             <Grid align="center" marginTop={5}>
@@ -400,7 +400,7 @@ export default function Flats() {
         </Box>
       </Modal>
 
-      <div styleM={{ height: 700, width: "100%" }}>
+      <div stylem={{ height: 700, width: "100%" }}>
         <DataGrid
           rows={tableData}
           columns={columns}
