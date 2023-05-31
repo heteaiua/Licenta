@@ -13,3 +13,13 @@
   color: rgb(5, 5, 13);
   opacity: 70%;
 }
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  width: 345px;
+}

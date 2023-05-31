@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import "./Appliances.css";
 import { styled } from "@mui/material/styles";
-
+import ReactSelect from "react-select";
 import {
   Paper,
   Link,
@@ -26,8 +26,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { useModal } from "../../components/Modal";
 import Login from "../../auth/login/Login";
 import { DataGrid } from "@mui/x-data-grid";
-
-const styleM = {
+const stylem = {
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -57,11 +56,16 @@ const columns = [
   { field: "name", headerName: "Name", width: 300 },
   {
     field: "consumption",
-    headerName: "Consumption",
+    headerName: "Consumption (kWh)",
     width: 300,
     type: "number",
   },
-  { field: "price", headerName: "Price", width: 300, type: "number" },
+  {
+    field: "price",
+    headerName: "Total Price(selected days)",
+    width: 300,
+    type: "number",
+  },
   {
     field: "dateStart",
     headerName: "dateStart",
@@ -75,11 +79,6 @@ const columns = [
     width: 300,
     type: "date",
     valueGetter: ({ value }) => value && new Date(value),
-  },
-  {
-    field: "Flat",
-    headerName: "Flat",
-    width: 300,
   },
 ];
 
@@ -100,16 +99,16 @@ export default function Appliances() {
   const handleOpenUpdate = () => setOpenUpdate(true);
   const handleCloseUpdate = () => setOpenUpdate(false);
 
-  const [flatId, setFlatId] = useState("");
+  const [flatId, setFlatId] = useState([]);
   const [flatUser, setFlatUser] = useState("");
 
   const [tableData, setTableData] = useState([]);
   const [selectedIndexs, setSelectedIndexes] = useState([]);
+  const [selectedFlat, setSelectedFlat] = useState([]);
   const [initialValue, setInitialValue] = useState([]);
   const [selectedAppliance, setSelectedAppliance] = useState({});
   const [tableDataFlat, setTableDataFlat] = useState([]);
   const [chosenFlat, setChosenFlat] = useState("");
-  const [selectedFlatName, setSelectedFlatName] = useState("");
   const handleUserId = (e) => {
     setUserId(e.target.value);
   };
@@ -185,7 +184,6 @@ export default function Appliances() {
     let flatUser = localStorage.getItem("user");
     if (flatUser) {
       setFlatUser(flatUser);
-      console.log("flatUserId", flatUser);
     }
   }, []);
 
@@ -204,21 +202,15 @@ export default function Appliances() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("getFlatsByUserId", data);
         const selectOptions = data.data.map(({ name, _id }) => ({
-          // id: index + 1,
-          name: name,
-          id: _id,
+          label: name,
+          value: _id,
         }));
-        console.log("selectOptions", selectOptions);
         setTableDataFlat(selectOptions);
-        setFlatId(data.data[0]._id);
       });
   };
 
-  useEffect(() => {
-    console.log("table data name", tableDataFlat);
-  }, [tableDataFlat]);
+  useEffect(() => {}, [tableDataFlat]);
 
   useEffect(() => {
     handleGetFlatsByUserId();
@@ -227,29 +219,24 @@ export default function Appliances() {
   // create appliance
   const handleCreateAppliance = async (e) => {
     e.preventDefault();
-    const applianceCall = await fetch(
-      "http://localhost:5000/appliance/newAppliance",
-      {
-        method: "POST",
-        headers: {
-          Authorization: "state.token",
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          name: applianceName,
-          consumption: applianceConsumption,
-          price: appliancePrice,
-          dateStart: startDate,
-          dateEnd: endDate,
-          flatId: flatId,
-          userId: flatUser,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => console.log("create", data));
+    await fetch("http://localhost:5000/appliance/newAppliance", {
+      method: "POST",
+      headers: {
+        Authorization: "state.token",
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        name: applianceName,
+        consumption: applianceConsumption,
+        price: appliancePrice,
+        dateStart: startDate,
+        dateEnd: endDate,
+        flatId: selectedFlat,
+        userId: flatUser,
+      }),
+    }).then((res) => res.json());
   };
 
   //get appliances by user id
@@ -269,9 +256,17 @@ export default function Appliances() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("datadadadadadadad", data);
         const transformed = data.data.map(
-          ({ _id, name, consumption, price, dateStart, dateEnd, flatId }) => ({
+          ({
+            _id,
+            name,
+            consumption,
+            price,
+            dateStart,
+            dateEnd,
+            flatId,
+            userId,
+          }) => ({
             // id: index + 1,
             id: _id,
             name: name,
@@ -280,17 +275,14 @@ export default function Appliances() {
             dateEnd: dateEnd,
             price: price,
             flatId: flatId,
-            userId: flatUser,
+            userId: userId,
           })
         );
-        console.log("transformed appliances", transformed);
         setTableData(transformed);
       });
   };
 
-  useEffect(() => {
-    console.log("table data user id appliances", tableData);
-  }, [tableData]);
+  useEffect(() => {}, [tableData]);
 
   useEffect(() => {
     handleGetAppliancesByUserId();
@@ -362,9 +354,7 @@ export default function Appliances() {
           flatId: flatId,
           userId: flatUser,
         }),
-      })
-        .then((res) => res.json())
-        .then((data) => console.log("dataDelete", data));
+      }).then((res) => res.json());
     });
   };
   //update appliance
@@ -385,12 +375,10 @@ export default function Appliances() {
           price: appliancePrice,
           dateStart: startDate,
           dateEnd: endDate,
-          flatId: flatId,
+          flatId: selectedFlat,
           userId: flatUser,
         }),
-      })
-        .then((res) => res.json())
-        .then((data) => console.log("dataUpdate", data));
+      }).then((res) => res.json());
       setSelectedAppliance(index);
     });
   };
@@ -417,7 +405,7 @@ export default function Appliances() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={styleM}>
+        <Box sx={stylem}>
           <div id="content-appliance">
             <header></header>
             <Grid align="center" marginTop={5}>
@@ -426,7 +414,7 @@ export default function Appliances() {
                 id="standard-helperText"
                 variant="standard"
                 label="Name"
-                defaultValue="aaaa"
+                defaultValue=""
                 type="text"
                 onChange={handleApplianceName}
                 fullWidth
@@ -435,7 +423,7 @@ export default function Appliances() {
                 style={style}
                 id="standard-helperText"
                 variant="standard"
-                label="Consumption/hour"
+                label="Consumption"
                 defaultValue=""
                 type="text"
                 onChange={handleApplianceConsumption}
@@ -443,7 +431,7 @@ export default function Appliances() {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment disableTypography position="end">
-                      Watt
+                      kWh
                     </InputAdornment>
                   ),
                 }}
@@ -453,7 +441,7 @@ export default function Appliances() {
                 style={style}
                 id="standard-helperText"
                 variant="standard"
-                label="Price/hour"
+                label="Price"
                 defaultValue=""
                 type="text"
                 onChange={handleAppliancePrice}
@@ -485,27 +473,36 @@ export default function Appliances() {
                   />
                 </div>
               </LocalizationProvider>
-              <FormControl sx={{ m: 5, minWidth: 30 }}>
-                <InputLabel id="demo-simple-select-helper-label">
-                  flat
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  defaultValue=""
-                  value={chosenFlat}
-                  label="Flat"
-                  onChange={handleChosenFlat}
-                  renderValue={renderSelectedFlat}
-                >
-                  {tableDataFlat.map((flat) => (
-                    <MenuItem key={flat.flatId} value={flat.flatId}>
-                      {flat.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <FormHelperText>Select the flat</FormHelperText>
-              </FormControl>
+              <Box sx={{ minWidth: 120 }}>
+                {/* 
+                  <InputLabel id="demo-simple-select-helper-label">
+                    flat
+                  </InputLabel> */}
+                <FormControl sx={{ m: 5, minWidth: 30 }}>
+                  <ReactSelect
+                    options={tableDataFlat}
+                    onChange={(e) => setSelectedFlat(e.value)}
+                  />
+                  <FormHelperText>Select the flat</FormHelperText>
+                </FormControl>
+                {/* <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    defaultValue=""
+                    value={chosenFlat || ""}
+                    label="Flat"
+                    onChange={handleChosenFlat}
+                    renderValue={renderSelectedFlat}
+                  >
+                    {tableDataFlat.map((flat) => (
+                      <MenuItem key={flat.flatId} value={flat.flatId}>
+                        {flat.name}
+                      </MenuItem>
+                    ))}
+                  </Select> */}
+                {/* <FormHelperText>Select the flat</FormHelperText>
+                </FormControl> */}
+              </Box>
 
               <Button
                 style={btnStyle}
@@ -526,7 +523,7 @@ export default function Appliances() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={styleM}>
+        <Box sx={stylem}>
           <div id="content-appliance">
             <header></header>
             <Grid align="center" marginTop={5}>
@@ -535,7 +532,7 @@ export default function Appliances() {
                 id="standard-helperText"
                 variant="standard"
                 label="Name"
-                defaultValue={initialValue}
+                defaultValue=""
                 type="text"
                 onChange={handleApplianceName}
                 fullWidth
@@ -544,7 +541,7 @@ export default function Appliances() {
                 style={style}
                 id="standard-helperText"
                 variant="standard"
-                label="Consumption/hour"
+                label="Consumption"
                 defaultValue=""
                 type="text"
                 onChange={handleApplianceConsumption}
@@ -552,7 +549,7 @@ export default function Appliances() {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment disableTypography position="end">
-                      Watt
+                      kWh
                     </InputAdornment>
                   ),
                 }}
@@ -562,7 +559,7 @@ export default function Appliances() {
                 style={style}
                 id="standard-helperText"
                 variant="standard"
-                label="Price/hour"
+                label="Price"
                 defaultValue=""
                 type="text"
                 onChange={handleAppliancePrice}
@@ -594,6 +591,15 @@ export default function Appliances() {
                   />
                 </div>
               </LocalizationProvider>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl sx={{ m: 5, minWidth: 30 }}>
+                  <ReactSelect
+                    options={tableDataFlat}
+                    onChange={(e) => setSelectedFlat(e.value)}
+                  />
+                  <FormHelperText>Select the flat</FormHelperText>
+                </FormControl>
+              </Box>
               <Button
                 style={btnStyle}
                 type="submit"
@@ -606,7 +612,7 @@ export default function Appliances() {
           </div>
         </Box>
       </Modal>
-      <div styleM={{ height: 700, width: "100%" }}>
+      <div stylem={{ height: 700, width: "100%" }}>
         <DataGrid
           rows={tableData}
           columns={columns}
@@ -619,7 +625,6 @@ export default function Appliances() {
           checkboxSelection
           onRowSelectionModelChange={(itm) => {
             setSelectedIndexes(itm);
-            console.log("indexes: " + itm);
           }}
         />
       </div>
