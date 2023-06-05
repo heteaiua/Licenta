@@ -56,7 +56,7 @@ const columns = [
   { field: "name", headerName: "Name", width: 300 },
   {
     field: "consumption",
-    headerName: "Consumption (kWh)",
+    headerName: "Putere (watt)",
     width: 300,
     type: "number",
   },
@@ -85,7 +85,7 @@ const columns = [
 export default function Appliances() {
   const [applianceName, setApplianceName] = useState("");
   const [applianceConsumption, setApplianceConsumption] = useState("");
-  const [appliancePrice, setAppliancePrice] = useState("");
+
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [userId, setUserId] = useState("");
@@ -109,6 +109,14 @@ export default function Appliances() {
   const [selectedAppliance, setSelectedAppliance] = useState({});
   const [tableDataFlat, setTableDataFlat] = useState([]);
   const [chosenFlat, setChosenFlat] = useState("");
+  const [hours, setHours] = useState(0);
+  const [calculatedPrice, setCalculatedPrice] = useState(0);
+  const handleCalculatedPrice = (event) => {
+    setCalculatedPrice(event.target.value);
+  };
+  const handleHoursChange = (event) => {
+    setHours(event.target.value);
+  };
   const handleUserId = (e) => {
     setUserId(e.target.value);
   };
@@ -128,15 +136,45 @@ export default function Appliances() {
   const handleApplianceConsumption = (e) => {
     setApplianceConsumption(e.target.value);
   };
-  const handleAppliancePrice = (e) => {
-    setAppliancePrice(e.target.value);
-  };
   const handleStartDate = (e) => {
     setStartDate(e.$d);
   };
   const handleEndDate = (e) => {
     setEndDate(e.$d);
   };
+  const calculateSelectedDays = () => {
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const timeDifference = Math.abs(end.getTime() - start.getTime());
+      const selectedDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+      return selectedDays + 1;
+    }
+    return 0;
+  };
+  const calculateTotalHours = () => {
+    const selectedDays = calculateSelectedDays();
+    return selectedDays * hours;
+  };
+  const calculatePrice = () => {
+    const selectedDays = calculateSelectedDays();
+    const totalHours = calculateTotalHours();
+    const consumption = parseFloat(applianceConsumption);
+    const total = (consumption * hours) / 1000;
+    // Calculate the price based on consumption and total hours
+    const price = total * 0.81 * selectedDays;
+
+    return price;
+  };
+  const [appliancePrice, setAppliancePrice] = useState("");
+  useEffect(() => {
+    setAppliancePrice(calculatePrice());
+  }, [applianceConsumption, hours, startDate, endDate]);
+
+  const handleAppliancePrice = (e) => {
+    setAppliancePrice(e.target.value);
+  };
+
   //get appliances by flat id;
 
   // const handleGetAllAppliancesByFlatId = async () => {
@@ -431,7 +469,7 @@ export default function Appliances() {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment disableTypography position="end">
-                      kWh
+                      Watt
                     </InputAdornment>
                   ),
                 }}
@@ -442,10 +480,11 @@ export default function Appliances() {
                 id="standard-helperText"
                 variant="standard"
                 label="Price"
-                defaultValue=""
                 type="text"
+                value={appliancePrice || ""} // Add this line
                 onChange={handleAppliancePrice}
                 fullWidth
+                disabled
                 InputProps={{
                   endAdornment: (
                     <InputAdornment disableTypography position="end">
@@ -453,7 +492,7 @@ export default function Appliances() {
                     </InputAdornment>
                   ),
                 }}
-                helperText="Standard price, you can modify"
+                helperText="Standard price, you can not modify"
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <div className="date-pick">
@@ -464,6 +503,7 @@ export default function Appliances() {
                     dateFormat="dd/MM/yyyy"
                     placeholderText="Select a date"
                   />
+
                   <label className="lab">Date End</label>
                   <DatePicker
                     selected={setEndDate}
@@ -471,6 +511,21 @@ export default function Appliances() {
                     dateFormat="dd/MM/yyyy"
                     placeholderText="Select a date"
                   />
+                  <TextField
+                    style={style}
+                    id="standard-helperText"
+                    variant="standard"
+                    label="Hours"
+                    defaultValue=""
+                    type="number"
+                    onChange={handleHoursChange}
+                    fullWidth
+                  />
+                </div>
+                <div>
+                  <p>Selected Days: {calculateSelectedDays()}</p>
+                  <p>Total Hours: {calculateTotalHours()}</p>
+                  {/* // <p>Total Price: {calculatePrice()}</p> */}
                 </div>
               </LocalizationProvider>
               <Box sx={{ minWidth: 120 }}>
@@ -560,8 +615,8 @@ export default function Appliances() {
                 id="standard-helperText"
                 variant="standard"
                 label="Price"
-                defaultValue=""
                 type="text"
+                value={appliancePrice} // Add this line
                 onChange={handleAppliancePrice}
                 fullWidth
                 InputProps={{
@@ -571,7 +626,7 @@ export default function Appliances() {
                     </InputAdornment>
                   ),
                 }}
-                helperText="Standard price, you can modify"
+                helperText="Standard price, you can not modify"
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <div className="date-pick">
@@ -589,6 +644,21 @@ export default function Appliances() {
                     dateFormat="dd/MM/yyyy"
                     placeholderText="Select a date"
                   />
+                  <TextField
+                    style={style}
+                    id="standard-helperText"
+                    variant="standard"
+                    label="Hours"
+                    defaultValue=""
+                    type="number"
+                    onChange={handleHoursChange}
+                    fullWidth
+                  />
+                </div>
+                <div>
+                  <p>Selected Days: {calculateSelectedDays()}</p>
+                  <p>Total Hours: {calculateTotalHours()}</p>
+                  {/* // <p>Total Price: {calculatePrice()}</p> */}
                 </div>
               </LocalizationProvider>
               <Box sx={{ minWidth: 120 }}>
