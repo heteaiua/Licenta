@@ -18,8 +18,10 @@
     "chart.js": "^4.3.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.7",
+    "faker": "^6.6.6",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.8",
     "react-router-dom": "^6.9.0",
@@ -51,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2"
   }
 }
