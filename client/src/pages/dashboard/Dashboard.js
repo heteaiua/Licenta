@@ -20,6 +20,23 @@ function Dashboard() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [price, setPrice] = useState("");
+  const [consumption, setConsumption] = useState("");
+  const [totalConsumption, setTotalConsumption] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [showTotalPrice, setShowTotalPrice] = useState(false);
+  const handleConsumption = (e) => {
+    setConsumption(e.target.value);
+  };
+  const handlePrice = (e) => {
+    setTotalPrice(e.target.value);
+  };
+  const handleTotalPrice = () => {
+    setShowTotalPrice(true);
+  };
+  const handleTotalConsumption = (e) => {
+    setTotalConsumption(e.target.value);
+  };
 
   const handleViewAppliances = (flatId) => {
     setSelectedCard(flatId);
@@ -29,6 +46,13 @@ function Dashboard() {
   const handleCloseModal = () => {
     setSelectedCard(null);
     setOpenModal(false);
+  };
+
+  const calculateTotalPrice = (appliances) => {
+    const totalPrice = appliances.reduce((accumulator, appliance) => {
+      return accumulator + appliance.price;
+    }, 0);
+    return totalPrice;
   };
 
   const handleGetAllAppliancesByFlatId = async (flatId) => {
@@ -56,14 +80,21 @@ function Dashboard() {
       console.log("getAllAppliancesByFlatId", data);
 
       if (data && data.data) {
-        const selectOptions = data.data.map(({ _id, name }) => ({
-          id: _id,
-          name: name,
-        }));
-        console.log("aiciiiiiii", selectOptions);
-        setTableDataFlat(selectOptions);
+        const appliances = data.data.map(
+          ({ _id, name, price, consumption }) => ({
+            id: _id,
+            name: name,
+            price: price,
+            consumption: consumption,
+          })
+        );
+        const totalPrice = calculateTotalPrice(appliances);
+        console.log("appliance", appliances);
+        setTableDataFlat(appliances);
+        return totalPrice;
       } else {
         setTableDataFlat([]);
+        return 0;
       }
     } catch (error) {
       console.error("Error fetching appliances data:", error);
@@ -72,44 +103,52 @@ function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    handleGetAllAppliancesByFlatId(selectedCard);
-  }, [selectedCard]);
-
-  useEffect(() => {
-    let flatUser = localStorage.getItem("user");
-    if (flatUser) {
-      setFlatUser(flatUser);
-    }
-  }, []);
-
   const handleGetFlatsByUserId = async () => {
-    let flatUser = localStorage.getItem("user");
-    await fetch(`http://localhost:5000/user/flats/${flatUser}`, {
-      method: "GET",
-      headers: {
-        Authorization: "state.token",
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("datadadadadadadad", data);
-        const transformed = data.data.map(
-          ({ _id, name, city, street, county }) => ({
-            id: _id,
-            name: name,
-            city: city,
-            street: street,
-            county: county,
-            userId: flatUser,
+    try {
+      let flatUser = localStorage.getItem("user");
+      if (!flatUser) return;
+
+      const response = await fetch(
+        `http://localhost:5000/user/flats/${flatUser}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "state.token",
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log("datadadadadadadad", data);
+
+      if (data && data.data) {
+        const flats = data.data.map(({ _id, name, city, street, county }) => ({
+          id: _id,
+          name: name,
+          city: city,
+          street: street,
+          county: county,
+          userId: flatUser,
+          totalPrice: 0,
+        }));
+
+        const flatsWithTotalPrice = await Promise.all(
+          flats.map(async (flat) => {
+            const totalPrice = await handleGetAllAppliancesByFlatId(flat.id);
+            return { ...flat, totalPrice: totalPrice };
           })
         );
-        console.log("transformed", transformed);
-        setTableData(transformed);
-      });
+
+        console.log("flatsWithTotalPrice", flatsWithTotalPrice);
+        setTableData(flatsWithTotalPrice);
+      } else {
+        setTableData([]);
+      }
+    } catch (error) {
+      console.error("Error fetching flats data:", error);
+    }
   };
 
   useEffect(() => {
@@ -145,6 +184,9 @@ function Dashboard() {
               >
                 View appliances
               </Button>
+              <Button size="small" color="primary">
+                Total price: {flat.totalPrice}
+              </Button>
             </CardActions>
           </Card>
         ))}
@@ -156,7 +198,7 @@ function Dashboard() {
           ) : (
             tableDataFlat.map((appliance) => (
               <MenuItem key={appliance.id} value={appliance.id}>
-                {appliance.name}
+                Nume: {appliance.name}, Pret: {appliance.price}
               </MenuItem>
             ))
           )}
