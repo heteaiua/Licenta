@@ -1,16 +1,7 @@
 #content {
   background-color: #fff;
   background-size: cover;
-  height: 100vh;
-}
-* {
-  margin: 0;
-  padding: 0;
-}
-#Container {
-  color: #fff;
-  font-family: sans-serif;
-  font-size: 16px;
+  display: flex;
 }
 
 .Logo {

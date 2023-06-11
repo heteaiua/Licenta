@@ -15,9 +15,11 @@ import { Navigate } from "react-router-dom";
 const Login = () => {
   const paperStyle = {
     padding: 30,
-    heigth: "80vh",
-    width: 280,
+    height: "50vh",
+    width: 400,
     margin: "20px auto",
+    backdropFilter: "blur(10px)", // Apply backdrop filter for opacity effect
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   };
   const avatarStyle = { backgroundColor: "#1976d2" };
   const btnStyle = { margin: "8px 0px" };
@@ -127,8 +129,7 @@ const Login = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div id="content">
-        <header></header>
-        <Grid align="center" marginTop={10}>
+        <Grid align="center">
           <Paper elevation={10} style={paperStyle}>
             <Avatar style={avatarStyle}>
               <PersonIcon />

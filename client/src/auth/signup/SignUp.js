@@ -11,10 +11,11 @@ import {
 import { Navigate } from "react-router-dom";
 export default function Signup() {
   const paperStyle = {
-    padding: 30,
-    heigth: "80vh",
+    padding: 50,
+    height: "102vh",
     width: 360,
-    margin: "20px auto",
+    backdropFilter: "blur(10px)", // Apply backdrop filter for opacity effect
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
   };
   const style = { margin: "10px " };
   const btnStyle = { margin: "8px 0px" };
@@ -190,10 +191,9 @@ export default function Signup() {
   return (
     <form onSubmit={handleSubmit}>
       <div id="content">
-        <header></header>
         <Grid align="center" marginTop={10}>
           <Paper elevation={10} style={paperStyle}>
-            <h2 style={btnStyle}>Register form</h2>
+            <h2>Register form</h2>
             <div className="messages">
               {errorMessage()}
               {successMessage()}
