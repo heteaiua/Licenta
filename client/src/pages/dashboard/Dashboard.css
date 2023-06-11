@@ -1,4 +1,4 @@
-.mainAction {
+/*.mainAction {
   padding-top: 30%;
   padding-bottom: 15%;
   background-color: rgb(234, 234, 241);
@@ -22,4 +22,153 @@
 
 .card {
   width: 345px;
+}
+*/
+/* Dashboard.css */
+/*
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  width: 300px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.card:hover {
+  background-color: #eaeaea;
+}
+
+.card.selected {
+  background-color: #b3b3b3;
+}
+
+.cardActionArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.applianceTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.applianceItem {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.loading {
+  text-align: center;
+  font-style: italic;
+  color: #888888;
+}
+
+.noAppliances {
+  font-style: italic;
+  color: #888888;
+}
+*/ /* Dashboard.css */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.space {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  width: 300px;
+  padding: 10px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.card:hover {
+  background-color: #eaeaea;
+}
+
+.card.selected {
+  background-color: #b3b3b3;
+}
+
+.cardActionArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.loading {
+  text-align: center;
+  font-style: italic;
+  color: #888888;
+}
+
+.noAppliances {
+  font-style: italic;
+  color: #888888;
+}
+
+.chartContainer {
+  margin: 20px 0;
 }

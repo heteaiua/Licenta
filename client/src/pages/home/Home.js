@@ -8,8 +8,11 @@ import "./Home.css";
 function Home() {
   return (
     <div id="content">
-      <header></header>
-
+      <header>Welcome to House Energy Management!</header>
+      <h3>
+        Start by creating your account, or if you have already, please log into
+        your account
+      </h3>
       <div className="mainAction">
         <Box>
           <Button
