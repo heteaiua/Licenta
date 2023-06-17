@@ -36,12 +36,14 @@ const stylem = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  overflow: "auto", // Added property for scrollability
 };
 const paperStyle = {
   padding: 20,
   heigth: "50vh",
   width: 300,
   margin: "5px auto",
+  overflow: "auto",
 };
 const Img = styled("img")({
   margin: "auto",
@@ -174,50 +176,7 @@ export default function Appliances() {
   const handleAppliancePrice = (e) => {
     setAppliancePrice(e.target.value);
   };
-
-  //get appliances by flat id;
-
-  // const handleGetAllAppliancesByFlatId = async () => {
-  //   await fetch(`http://localhost:5000/flat/appliances/:${flatId}`, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: "state.token",
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //       "Access-Control-Allow-Origin": "*",
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log("getAllAppliancesByFlatId", data);
-  //       const selectOptions = data.data.map(
-  //         ({ _id, name, consumption, price, dateStart, dateEnd, flatId }) => ({
-  //           // id: index + 1,
-  //           id: _id,
-  //           name: name,
-  //           consumption: consumption,
-  //           dateStart: dateStart,
-  //           dateEnd: dateEnd,
-  //           price: price,
-  //           flatId: flatId,
-  //         })
-  //       );
-  //       console.log("aiciiiiiii", selectOptions);
-  //       setTableDataFlat(selectOptions);
-  //       //setFlatId(data.data[0]._id);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   console.log("table data name", tableDataFlat);
-  // }, [tableDataFlat]);
-
-  // useEffect(() => {
-  //   handleGetAllAppliancesByFlatId();
-  // }, []);
-
   //get flats by user ID
-
   useEffect(() => {
     let flatUser = localStorage.getItem("user");
     if (flatUser) {
@@ -326,51 +285,6 @@ export default function Appliances() {
     handleGetAppliancesByUserId();
   }, []);
 
-  // // //get appliances
-
-  // const handleGetAppliances = async () => {
-  //   const applianceCall = await fetch(
-  //     "http://localhost:5000/appliance/getAllAppliances",
-  //     {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: "state.token",
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //         "Access-Control-Allow-Origin": "*",
-  //       },
-  //     }
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       const transformed = data.appliances.map(
-  //         (
-  //           { _id, name, consumption, price, dateStart, dateEnd, flatId },
-  //           index
-  //         ) => ({
-  //           // id: index + 1,
-  //           id: _id,
-  //           name: name,
-  //           consumption: consumption,
-  //           dateStart: dateStart,
-  //           dateEnd: dateEnd,
-  //           price: price,
-  //           flatId: flatId,
-  //         })
-  //       );
-  //       //console.log(transformed);
-  //       setTableData(transformed);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   //console.log("table data", tableData);
-  // }, [tableData]);
-
-  // useEffect(() => {
-  //   handleGetAppliances();
-  // }, []);
-
   //delete appliance
   const handleDeleteAppliance = async (e) => {
     //e.preventDefault();
@@ -437,15 +351,9 @@ export default function Appliances() {
           Update Appliance
         </Button>
       </div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={open} onClose={handleClose}>
         <Box sx={stylem}>
           <div id="content-appliance">
-            <header></header>
             <Grid align="center" marginTop={5}>
               <TextField
                 style={style}
@@ -473,7 +381,6 @@ export default function Appliances() {
                     </InputAdornment>
                   ),
                 }}
-                helperText="Standard consumption, you can modify"
               />
               <TextField
                 style={style}
@@ -492,7 +399,6 @@ export default function Appliances() {
                     </InputAdornment>
                   ),
                 }}
-                helperText="Standard price, you can not modify"
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <div className="date-pick">
@@ -522,51 +428,27 @@ export default function Appliances() {
                     fullWidth
                   />
                 </div>
-                <div>
+                {/* <span>
                   <p>Selected Days: {calculateSelectedDays()}</p>
                   <p>Total Hours: {calculateTotalHours()}</p>
-                  {/* // <p>Total Price: {calculatePrice()}</p> */}
-                </div>
+                </span> */}
               </LocalizationProvider>
-              <Box sx={{ minWidth: 120 }}>
-                {/* 
-                  <InputLabel id="demo-simple-select-helper-label">
-                    flat
-                  </InputLabel> */}
-                <FormControl sx={{ m: 5, minWidth: 30 }}>
+              <Box sx={{ minWidth: 50 }}>
+                <FormControl sx={{ m: 4, minWidth: 30 }}>
                   <ReactSelect
                     options={tableDataFlat}
                     onChange={(e) => setSelectedFlat(e.value)}
                   />
-                  <FormHelperText>Select the flat</FormHelperText>
                 </FormControl>
-                {/* <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    defaultValue=""
-                    value={chosenFlat || ""}
-                    label="Flat"
-                    onChange={handleChosenFlat}
-                    renderValue={renderSelectedFlat}
-                  >
-                    {tableDataFlat.map((flat) => (
-                      <MenuItem key={flat.flatId} value={flat.flatId}>
-                        {flat.name}
-                      </MenuItem>
-                    ))}
-                  </Select> */}
-                {/* <FormHelperText>Select the flat</FormHelperText>
-                </FormControl> */}
+                <Button
+                  style={btnStyle}
+                  type="submit"
+                  variant="contained"
+                  onClick={handleCreateAppliance}
+                >
+                  Add
+                </Button>
               </Box>
-
-              <Button
-                style={btnStyle}
-                type="submit"
-                variant="contained"
-                onClick={handleCreateAppliance}
-              >
-                Add
-              </Button>
             </Grid>
           </div>
         </Box>
@@ -587,8 +469,7 @@ export default function Appliances() {
                 id="standard-helperText"
                 variant="standard"
                 label="Name"
-                defaultValue=""
-                type="text"
+                value={selectedAppliance.name}
                 onChange={handleApplianceName}
                 fullWidth
               />
@@ -608,17 +489,17 @@ export default function Appliances() {
                     </InputAdornment>
                   ),
                 }}
-                helperText="Standard consumption, you can modify"
               />
               <TextField
                 style={style}
                 id="standard-helperText"
                 variant="standard"
                 label="Price"
+                defaultValue=""
                 type="text"
-                value={appliancePrice} // Add this line
                 onChange={handleAppliancePrice}
                 fullWidth
+                disabled
                 InputProps={{
                   endAdornment: (
                     <InputAdornment disableTypography position="end">
@@ -626,7 +507,6 @@ export default function Appliances() {
                     </InputAdornment>
                   ),
                 }}
-                helperText="Standard price, you can not modify"
               />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <div className="date-pick">
@@ -655,34 +535,32 @@ export default function Appliances() {
                     fullWidth
                   />
                 </div>
-                <div>
+                {/* <div>
                   <p>Selected Days: {calculateSelectedDays()}</p>
                   <p>Total Hours: {calculateTotalHours()}</p>
                   {/* // <p>Total Price: {calculatePrice()}</p> */}
-                </div>
               </LocalizationProvider>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl sx={{ m: 5, minWidth: 30 }}>
+              <Box sx={{ minWidth: 50 }}>
+                <FormControl sx={{ m: 2, minWidth: 30 }}>
                   <ReactSelect
                     options={tableDataFlat}
                     onChange={(e) => setSelectedFlat(e.value)}
                   />
-                  <FormHelperText>Select the flat</FormHelperText>
                 </FormControl>
+                <Button
+                  style={btnStyle}
+                  type="submit"
+                  variant="contained"
+                  onClick={handleUpdateAppliance}
+                >
+                  Update
+                </Button>
               </Box>
-              <Button
-                style={btnStyle}
-                type="submit"
-                variant="contained"
-                onClick={handleUpdateAppliance}
-              >
-                Update
-              </Button>
             </Grid>
           </div>
         </Box>
       </Modal>
-      <div stylem={{ height: 700, width: "100%" }}>
+      <div stylem={{ height: 300, width: "100%" }}>
         <DataGrid
           rows={tableData}
           columns={columns}
