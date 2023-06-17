@@ -7,7 +7,7 @@ import SignUp from "./auth/signup/SignUp";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Navbar from "./components/Navbar";
 import Appliances from "./pages/appliances/Appliances";
-import ContactUs from "./pages/contactUs/ContactUs";
+import Consumption from "./pages/Consumption/Consumption";
 import Flats from "./pages/flats/Flats";
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
         <Route path="/Home" element={<Dashboard />} />
         <Route path="/Appliances" element={<Appliances />} />
         <Route path="/Flats" element={<Flats />} />
-        <Route path="/ContactUs" element={<ContactUs />} />
+        <Route path="/Consumption" element={<Consumption />} />
       </Routes>
     </>
   );

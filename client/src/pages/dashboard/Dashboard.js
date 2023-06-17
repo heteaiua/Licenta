@@ -2,6 +2,7 @@
 import "./Dashboard.css";
 import * as React from "react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Card from "@mui/material/Card";
 import {
   Button,
@@ -110,7 +111,14 @@ const Dashboard = () => {
     const totalPrice = appliances.reduce((accumulator, appliance) => {
       return accumulator + appliance.price;
     }, 0);
-    return totalPrice;
+    return totalPrice.toFixed(2);
+  };
+  const calculateTotalPriceForAllFlats = () => {
+    const totalPrice = tableData.reduce(
+      (accumulator, flat) => accumulator + parseFloat(flat.totalPrice),
+      0
+    );
+    return totalPrice.toFixed(2);
   };
 
   const handleGetAllAppliancesByFlatId = async (flatId) => {
@@ -225,6 +233,18 @@ const Dashboard = () => {
   useEffect(() => {
     handleGetFlatsByUserId();
   }, []);
+  // const options = {
+  //   responsive: true,
+  //   plugins: {
+  //     legend: {
+  //       position: "top",
+  //     },
+  //     title: {
+  //       display: true,
+  //       text: "Total prices for each flat",
+  //     },
+  //   },
+  // };
   const options = {
     responsive: true,
     plugins: {
@@ -236,69 +256,78 @@ const Dashboard = () => {
         text: "Chart.js Line Chart",
       },
     },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
   };
   return (
     <form>
-      <div className="space">View your flats!</div>
-      <div className="chartContainer">
-        {chartData && <Line options={options} data={chartData} />}
+      <div className="content">
+        <div className="space">
+          Total price:{calculateTotalPriceForAllFlats()} RON
+        </div>
+        <div className="chartContainer">
+          {chartData && <Line options={options} data={chartData} />}
+        </div>
+        <div className="cardContainer">
+          {tableData.map((flat) => (
+            <Card
+              key={flat.id}
+              className={`card ${selectedCard === flat.id ? "selected" : ""}`}
+            >
+              <CardActionArea component={Link} to={"/Consumption"}>
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {flat.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <div>Street: {flat.street}</div>
+                    <div>City: {flat.city}</div>
+                    <div>County: {flat.county}</div>
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <CardActions>
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => handleViewAppliances(flat.id)}
+                >
+                  View appliances
+                </Button>
+                <Button size="small" color="primary">
+                  Total price: {flat.totalPrice}
+                </Button>
+              </CardActions>
+            </Card>
+          ))}
+        </div>
+        <Dialog open={openModal} onClose={handleCloseModal}>
+          <DialogContent>
+            {loading ? (
+              <div className="loading">Loading...</div>
+            ) : (
+              <div>
+                {selectedFlatAppliances.length === 0 ? (
+                  <div className="noAppliances">
+                    No appliances found for this flat.
+                  </div>
+                ) : (
+                  selectedFlatAppliances.map((appliance) => (
+                    <MenuItem key={appliance.id} value={appliance.id}>
+                      <div>{appliance.name}</div>
+                      <div>:</div>
+                      <div> {appliance.price}</div>
+                    </MenuItem>
+                  ))
+                )}
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
-      <div className="cardContainer">
-        {tableData.map((flat) => (
-          <Card
-            key={flat.id}
-            className={`card ${selectedCard === flat.id ? "selected" : ""}`}
-          >
-            <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {flat.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  <span>Street: {flat.street}</span>
-                  <span>City: {flat.city}</span>
-                  <span>County: {flat.county}</span>
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button
-                size="small"
-                color="primary"
-                onClick={() => handleViewAppliances(flat.id)}
-              >
-                View appliances
-              </Button>
-              <Button size="small" color="primary">
-                Total price: {flat.totalPrice}
-              </Button>
-            </CardActions>
-          </Card>
-        ))}
-      </div>
-      <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogContent>
-          {loading ? (
-            <div className="loading">Loading...</div>
-          ) : (
-            <div>
-              {selectedFlatAppliances.length === 0 ? (
-                <div className="noAppliances">
-                  No appliances found for this flat.
-                </div>
-              ) : (
-                selectedFlatAppliances.map((appliance) => (
-                  <MenuItem key={appliance.id} value={appliance.id}>
-                    <div>{appliance.name}</div>
-                    <div>:</div>
-                    <div> {appliance.price}</div>
-                  </MenuItem>
-                ))
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </form>
   );
 };

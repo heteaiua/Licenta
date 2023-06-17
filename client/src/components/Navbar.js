@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link, NavLink } from "react-router-dom";
 import "./Navbar.css";
-const pages = ["Home", "Flats", "Appliances", "AboutUs"];
+const pages = ["Home", "Flats", "Appliances", "Consumption"];
 const settings = ["Profile", "Account", "Logout"];
 
 function ResponsiveAppBar() {
