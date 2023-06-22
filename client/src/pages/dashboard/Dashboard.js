@@ -319,7 +319,7 @@ const Dashboard = () => {
                     <MenuItem key={appliance.id} value={appliance.id}>
                       <div>{appliance.name}</div>
                       <div>:</div>
-                      <div> {appliance.price}</div>
+                      <div> {appliance.price.toFixed(2)}</div>
                     </MenuItem>
                   ))
                 )}
