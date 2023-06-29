@@ -164,7 +164,7 @@ export default function Appliances() {
     const consumption = parseFloat(applianceConsumption);
     const total = (consumption * hours) / 1000;
     // Calculate the price based on consumption and total hours
-    const price = total * 0.81 * selectedDays;
+    const price = total * 0.80 * selectedDays;
 
     return price;
   };
