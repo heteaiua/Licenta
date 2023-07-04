@@ -95,7 +95,7 @@ const Login = () => {
     if (isDisabled) {
       setError(true);
     } else {
-      await fetch("http://localhost:5000/user/login", {
+      await fetch("http://backend-licenta-eight.vercel.app/user/login", {
         method: "POST",
         headers: {
           Accept: "application/json",
