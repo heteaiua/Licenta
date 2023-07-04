@@ -21,7 +21,7 @@
       rgba(255, 255, 255, 0.6),
       rgba(118, 169, 255, 0.6)
     ),
-    url("C:\Users\User\Desktop\Licenta\client\public\hei.png");
+    url("../../../public/hei.png");
   background-repeat: no-repeat;
   background-size: cover;
 }
