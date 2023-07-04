@@ -186,7 +186,7 @@ export default function Appliances() {
 
   const handleGetFlatsByUserId = async () => {
     await fetch(
-      `http://backend-licenta-eight.vercel.app/user/flats/${localStorage.getItem("user")}`,
+      `https://backend-licenta-eight.vercel.app/user/flats/${localStorage.getItem("user")}`,
       {
         method: "GET",
         headers: {
@@ -216,7 +216,7 @@ export default function Appliances() {
   // create appliance
   const handleCreateAppliance = async (e) => {
     e.preventDefault();
-    await fetch("http://backend-licenta-eight.vercel.app/appliance/newAppliance", {
+    await fetch("https://backend-licenta-eight.vercel.app/appliance/newAppliance", {
       method: "POST",
       headers: {
         Authorization: "state.token",
@@ -240,7 +240,7 @@ export default function Appliances() {
 
   const handleGetAppliancesByUserId = async () => {
     await fetch(
-      `http://backend-licenta-eight.vercel.app/user/appliances/${localStorage.getItem("user")}`,
+      `https://backend-licenta-eight.vercel.app/user/appliances/${localStorage.getItem("user")}`,
       {
         method: "GET",
         headers: {
@@ -289,7 +289,7 @@ export default function Appliances() {
   const handleDeleteAppliance = async (e) => {
     //e.preventDefault();
     selectedIndexs.map(async (index) => {
-      await fetch(`http://backend-licenta-eight.vercel.app/appliance/deleteAppliance/${index}`, {
+      await fetch(`https://backend-licenta-eight.vercel.app/appliance/deleteAppliance/${index}`, {
         method: "DELETE",
         headers: {
           Authorization: "state.token",
@@ -313,7 +313,7 @@ export default function Appliances() {
   const handleUpdateAppliance = async (e) => {
     //e.preventDefault();
     selectedIndexs.map(async (index) => {
-      await fetch(`http://backend-licenta-eight.vercel.app/appliance/updateAppliance/${index}`, {
+      await fetch(`https://backend-licenta-eight.vercel.app/appliance/updateAppliance/${index}`, {
         method: "PATCH",
         headers: {
           Authorization: "state.token",

@@ -116,7 +116,7 @@ const Consumption = () => {
     setOpenModal(true);
     try {
       const response = await fetch(
-        `http://backend-licenta-eight.vercel.app/flat/appliances/${flatId}`,
+        `https://backend-licenta-eight.vercel.app/flat/appliances/${flatId}`,
         {
           method: "GET",
           headers: {
@@ -169,7 +169,7 @@ const Consumption = () => {
       setLoading(true);
 
       const response = await fetch(
-        `http://backend-licenta-eight.vercel.app/flat/appliances/${flatId}`,
+        `https://backend-licenta-eight.vercel.app/flat/appliances/${flatId}`,
         {
           method: "GET",
           headers: {
@@ -212,7 +212,7 @@ const Consumption = () => {
       if (!flatUser) return;
 
       const response = await fetch(
-        `http://backend-licenta-eight.vercel.app/user/flats/${flatUser}`,
+        `https://backend-licenta-eight.vercel.app/user/flats/${flatUser}`,
         {
           method: "GET",
           headers: {

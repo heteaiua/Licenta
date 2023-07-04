@@ -110,7 +110,7 @@ export default function Flats() {
   // create flat
   const handleCreateFlat = async (e) => {
     //e.preventDefault();
-    const flatCall = await fetch("http://backend-licenta-eight.vercel.app/flat/newflat", {
+    const flatCall = await fetch("https://backend-licenta-eight.vercel.app/flat/newflat", {
       method: "POST",
       headers: {
         Authorization: "state.token",
@@ -132,7 +132,7 @@ export default function Flats() {
 
   //get flats
   // const handleGetFlats = async () => {
-  //   const flatsCall = await fetch("http://backend-licenta-eight.vercel.app/flat/getAllFlats", {
+  //   const flatsCall = await fetch("https://backend-licenta-eight.vercel.app/flat/getAllFlats", {
   //     method: "GET",
   //     headers: {
   //       Authorization: "state.token",
@@ -171,7 +171,7 @@ export default function Flats() {
   //get flats
   const handleGetFlatsByUserId = async () => {
     let flatUser = localStorage.getItem("user");
-    await fetch(`http://backend-licenta-eight.vercel.app/user/flats/${flatUser}`, {
+    await fetch(`https://backend-licenta-eight.vercel.app/user/flats/${flatUser}`, {
       method: "GET",
       headers: {
         Authorization: "state.token",
@@ -211,7 +211,7 @@ export default function Flats() {
   const handleDeleteFlat = async (e) => {
     //e.preventDefault();
     selectedIndexs.map(async (index) => {
-      await fetch(`http://backend-licenta-eight.vercel.app/flat/deleteFlat/${index}`, {
+      await fetch(`https://backend-licenta-eight.vercel.app/flat/deleteFlat/${index}`, {
         method: "DELETE",
         headers: {
           Authorization: "state.token",
@@ -236,7 +236,7 @@ export default function Flats() {
   const handleUpdateFlat = async (e) => {
     //e.preventDefault();
     selectedIndexs.map(async (index) => {
-      await fetch(`http://backend-licenta-eight.vercel.app/flat/updateFlat/${index}`, {
+      await fetch(`https://backend-licenta-eight.vercel.app/flat/updateFlat/${index}`, {
         method: "PATCH",
         headers: {
           Authorization: "state.token",

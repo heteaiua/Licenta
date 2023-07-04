@@ -152,7 +152,7 @@ export default function Signup() {
       if (isDisabled) {
         setError(true);
       } else {
-        await fetch("http://backend-licenta-eight.vercel.app/user/signup", {
+        await fetch("https://backend-licenta-eight.vercel.app/user/signup", {
           method: "POST",
           headers: {
             Accept: "application/json",
